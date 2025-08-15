@@ -1,0 +1,829 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Autism Website</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <style>
+        .msgchatt1{
+            background-color: rgb(38, 152, 38);
+            color: white;
+        }
+        .wincontainer{
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wincard{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            h1{
+                font-size: 60px;
+                color: rgba(111, 78, 222, 0.845);
+                text-shadow: 1px 1px 2px rgb(255, 255, 255);
+            }
+        }
+        #hiddenContent{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            background-color: #258ea617;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div id="hiddenContent" style="display: none;z-index: 9999;">
+        <div class="wincard">
+            <dotlottie-player src="https://lottie.host/6b8e0485-bc6c-4398-b315-b3c1f7aaea05/kpEY5ThJWu.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);" loop autoplay></dotlottie-player>
+            <h1>Well played, Buddy!</h1>
+            <dotlottie-player src="https://lottie.host/ad18d3a3-894d-4095-b7c7-59b0b36eee16/qtij22Tlzh.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+        </div>
+    </div>
+
+    <div style="display: none; z-index: 999;"  class="signup_wrapper">
+        <div class="signupcontainer">
+            <div class="signupillustration">
+                <img src="{%  static 'images/people-playing-ludo-game-b.png' %}" alt="Login illustration">
+            </div>
+            <div class="signupform-container">
+                <h3 class="signupclose" onclick="closesignup()"><ion-icon name="close-outline"></ion-icon></h3>
+
+                <h1 class="loginh1">Create Account</h1>
+         
+                <p class="signupsubtitle">Join us today! Please fill out the form below to get started.</p>
+                <form  method="post" action="{% url 'sig' %}"> 
+                {% csrf_token %}
+                    <div class="signupform-group">
+                        <label for="fullName">Username</label>
+                        <input type="text" id="fullName" pattern="[A-Za-z ]+" 
+                            title="Only letters are allowed (no numbers or special characters)" required name="fullname" class="fullname" oninput="checkinput()">
+                    </div> 
+                    <div class="signupform-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required name="email" class="email">
+                    </div>
+                    <div class="signupform-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" pattern=".{8,}" 
+                            title="Password must be at least 8 characters" required name="password" class="password">
+                    </div>
+                    <p class="error" style="display: none; font-size: 12px;">Username already exists</p>
+                    <button type="submit" class="sign-up-btn">Create Account</button>
+                </form>
+                    <div class="login-link">
+                        Already have an account? <a href="#" onclick="reshowLogin()">Log in</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+<!-- #chattbotstart -->
+<div class="chatt_bot" style="width: 100%; height: 60%">
+    <div class="chatt" style="width: 25%;position: absolute;right: 40px; height: 400px; background-color: #ffffff;box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 5px;padding-top: 10px;">
+        <div class="chatt_heading" style="width: 100%; position: relative;">
+            <div class="head" style="display: flex;justify-content: space-between;">
+                <div class="leftsec" style="display: flex;">
+                    <div class="imagesss">
+                        <img src="{% static 'images/Cartoon Style Robot.jpg' %}" style="width:40px; height:40px;border-radius:100%; object-fit: cover; background-color: #bababa;">
+                    </div>
+                    <div class="text">
+                        <h5 style="font-weight: 500;font-size: 17px;">Chatbot</h5>
+                        <h6 style="font-weight: 400; font-size: 10px;">Hey, how can I help you?</h6>
+                    </div>
+                </div>
+                <div class="cross" style="margin-right: 5px;">
+                    <ion-icon name="close-circle" style="font-size: 17px;color: gray;" onclick="closeChat()"></ion-icon>
+                </div>
+            </div>
+            <div class="allmessages" style="display: flex; padding-left: 10px;padding-right: 10px; flex-direction:column; width: 95%; height: 290px; gap: 10px; overflow-y: auto; align-self: center; justify-content: flex-start;">
+                {% for message in messages %}
+                    <div class="replayofchatt" style="border-radius: 15px; background-color: #ebebeb; display: flex;align-self: flex-end; margin-left: -50px;color: rgb(0, 0, 0);padding: 10px;">
+                        <h6 style="font-weight: 400;">{{message.user_msg}}</h6>
+                    </div>
+                    <div class="replayofchatt msgchatt1" style="border-radius: 15px; display: flex;align-self: flex-start; padding: 10px;">
+                        <h6 style="font-weight: 400;">{{message.bot}}</h6>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <center>
+            <div class="msg" style="width: 90%; height: 40px; display: flex; align-items: center; gap: 10px;margin-top: 10px;">
+                <input type="text" id="messageInput" class="msgsend" name="message" style="width: 100%; height: 100%;border-radius: 5px; border: 1px solid rgb(212, 201, 201);padding-left: 10px; outline: none;" placeholder="Type Your message">
+                <ion-icon id="micIcon" name="mic-outline" style="font-size: 25px;color: grey;cursor: pointer;" onclick="startVoiceRecognition()"></ion-icon>
+                <ion-icon name="send-outline" style="font-size: 25px;color: grey;" onclick="senddatas()"></ion-icon>
+            </div>
+        </center>
+    </div>
+</div>
+
+
+
+
+
+<!-- #chattbotend -->
+
+
+
+    <div style="display: none;" class="login_wrapper">
+
+        <div class="logincontainer">
+            <div class="loginillustration">
+                <img src="{% static 'images/people-playing-ludo-game-b.png' %}" alt="Login illustration">
+            </div>
+            <div class="loginform-container">
+                <h3 class="loginclose" onclick="closeLogin()"><ion-icon name="close-outline"></ion-icon></h3>
+                <h1 class="loginh1">Welcome!</h1>
+                <form  method="post">
+                    {% csrf_token %}
+                    <div class="loginform-group">
+                        <label for="text">User Name</label>
+                        <input type="text" id="username" class="Username"  name="username" required>
+                    </div>
+                    <div class="loginform-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="Password" name="password" required>
+                    </div>
+                    <p class="error1" style="display: none; font-size: 12px;text-align: center;width: 100%;">Invalid login credentials</p>
+
+                    <div class="loginremember-forgot">
+                    </div>
+                    <button type="button" onclick="checklogin()" class="sign-in-btn">Sign in</button>
+                    <div class="sign-up">
+                        Don't have an account? <a onclick="reshowsignup()"> Sign up</a>
+                    </div>
+                    
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="navbar">
+        <div class="left">
+            <h1>LearnAble</h1>
+            <img class="navanimation" src="{% static 'images/loading.gif' %}" alt=""> 
+        </div>
+        <div class="right">
+        <a href="">Home</a>
+        <a href="#Features">Features</a>
+        <a href="#doctors">Doctors</a>
+        <a href="#blog">Blog</a>
+        {% if request.user.is_authenticated%}
+        <a href="#games">Games</a>
+        <a href="{% url 'feedtest' %}">Feedback</a>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+        <a onclick="chatt()" style="cursor: pointer;">ChatBot</a>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+        
+        <a href="{% url 'forum' %}">Forum</a>
+        {% endif %}
+
+        {% if request.user.is_authenticated and not request.user.is_superuser %}
+        <a href="{% url 'parentDashboard' %}">Dashboard</a>
+    {% endif %}
+
+
+    {% if request.user.is_authenticated and request.user.is_superuser %}
+        <a href="{% url 'adminDashboard' %}">Dashboard</a>
+    {% endif %}
+    
+
+        {% if request.user.is_authenticated %}
+        {% if detection_running %}
+        <form action="{% url 'stop_gaze' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="signup" style="background-color: rgb(181, 65, 65);">Stop Gaze Detection</button>
+        </form>
+        {% else %}
+            <form action="{% url 'start_gaze' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="signup">Start Gaze Detection</button>
+            </form>
+        {% endif %}
+        <a href="{% url 'logouts' %}" class="login" style="padding: 1px 5px;"><button style="cursor: pointer;border: none;background-color: transparent;color: #258EA6;font-weight: 600;padding: 7px;" >Log Out</button></a>
+        {% else %}
+        <button onclick="showLogin()" style="cursor: pointer;" class="login">Log In</button>
+        <button onclick="showsignup()" style="cursor: pointer;" class="signup">Sign Up</button>
+        {% endif %}
+        </div>
+    </div>
+    <div class="hero">
+        <img src="{% static 'images/herobanner.jpg' %}" alt="">
+        <div class="textcontainer">
+            <h1 style="color: white;opacity: 1;">We Play We Learn</h1>
+            <h3>LearnAble is a platform made for learning by playing</h3>
+            {% if not request.user.is_authenticated %}
+        <button onclick="showsignup()" style="cursor: pointer;background-color: white;color: black;margin-top: 25px; width: 250px;font-weight: 700;display: flex;align-items: center;justify-content: center;" class="signup">Create Your Account Now <ion-icon name="caret-forward-outline"></ion-icon></button>
+        {% else %}
+       <a href="#games"> <button  style="cursor: pointer;background-color: white;color: black;margin-top: 25px; width: 250px;font-weight: 700;display: flex;align-items: center;justify-content: center;" class="signup">Get Started <ion-icon name="caret-forward-outline"></ion-icon></button></a>
+        {% endif %}
+    </div>   
+    </div>
+    <div class="ourprogram">
+        <div class="programtext">
+        <h1>Our <span style="color: #258EA6;">Programs</span></h1>
+        <h4 style="width: 400px;text-align: center;">Discover a wide range of programs designed to challenge and inspire you</h4>
+        </div>
+        <div class="programcards">
+            <div class="card">
+                <img class="cardimg" src="{% static 'images/Learnthroughgames.png' %}" alt="">
+                <h2>Learn through games</h2>
+                <h3>Interactive activities uniquely empower autistic children.</h3>
+                <a href="#games" style="text-decoration: none;"><button>Games<ion-icon class="roundarrow" name="arrow-forward-circle"></ion-icon></button></a>
+            </div>
+            
+            <div class="card">
+                <img class="cardimg" src="{% static 'images/AutismForum.png' %}" alt="">
+                <h2>Autism Forum</h2>
+                <h3>Connect parents, caregivers, experts; share experiences.</h3>
+                <a href="{% url 'forum' %}" style="text-decoration: none;"><button>Forum<ion-icon class="roundarrow" name="arrow-forward-circle"></ion-icon></button></a>
+
+            </div>
+            
+            <div class="card">
+                <img class="cardimg" src="{% static 'images/ProfessionalSupport.png' %}" alt="">
+                <h2>Professional Support</h2>
+                <h3>Autism specialists and healthcare providers guide.</h3>
+                <a href="#doctors" style="text-decoration: none;"><button>Professionals<ion-icon class="roundarrow" name="arrow-forward-circle"></ion-icon></button></a>
+            </div>
+            {% if request.user.is_authenticated and not request.user.is_superuser %}
+            <div class="card" >
+                <img class="cardimg" src="{% static 'images/ParentDashboard.png' %}" alt="">
+                <h2>Parent Dashboard</h2>
+                <h3>Track child's progress; receive tailored recommendations.</h3>
+                <a href="{% url 'parentDashboard' %}" style="text-decoration: none;"><button>Dashboard<ion-icon class="roundarrow" name="arrow-forward-circle"></ion-icon></button></a>
+            </div >
+            {% endif %}
+            {% if request.user.is_authenticated and request.user.is_superuser %}
+            <div class="card" >
+                <img class="cardimg" src="{% static 'images/ParentDashboard.png' %}" alt="">
+                <h2>Admin Dashboard</h2>
+                <h3>Track child's progress; receive tailored recommendations.</h3>
+                <a href="{% url 'adminDashboard' %}" style="text-decoration: none;"><button>Dashboard<ion-icon class="roundarrow" name="arrow-forward-circle"></ion-icon></button></a>
+            </div >
+            {% endif %}
+
+
+
+
+
+
+        </div >
+        <input type="text" name="" id="Features" style="border: none;outline: none;caret-color: transparent; background-color: transparent;">
+    </div>
+
+    <div class="Empowering" >
+        <hr style="opacity: 0.2;">
+        <div class="empowertext" style="margin-top: 25px;">
+        <h1><span style="color: black;">Empowering</span> Every Journey</h1>
+        <h4 style="width: 500px;text-align: center;">Access expert advice, tools, and resources designed to support individuals with autism and their caregivers</h4>
+        </div>
+        <div class="empower">
+            <div class="empcard">
+                <div class="circlebackground">
+                <h1><ion-icon name="heart"></ion-icon></ion-icon></h1>
+            </div>
+                <h2>Therapy & Support</h2>
+                <h3>Find specialized therapy sessions, speech therapy, and behavioral support programs.</h3>
+            </div>
+            
+            <div class="empcard">
+                <div class="circlebackground">
+                <h1><ion-icon name="laptop"></ion-icon></h1>
+                </div>
+                <h2>Interactive Learning</h2>
+                <h3>Engage in fun and educational games designed to enhance learning and social skills.</h3>
+            </div>
+            
+            <div class="empcard">
+                <div class="circlebackground">
+                <h1><ion-icon name="chatbubbles"></ion-icon></ion-icon></h1>
+                </div>
+                <h2>Community & Forums</h2>
+                <h3>Connect with parents, caregivers, and experts in a safe and supportive space.</h3>
+            </div>
+            
+            <div class="empcard">
+                <div class="circlebackground">
+                <h1><ion-icon name="leaf"></ion-icon></h1>
+                </div>
+                <h2>Chatbot</h2>
+                <h3>Our chatbot provides instant, reliable answers to queries related to autism.</h3>
+            </div>    
+        </div>
+    </div>
+    <input type="text" name="" id="doctors" style="border: none;outline: none;caret-color: transparent " >
+    <div class="doctorsection" >
+        <hr style="opacity: 0.2;">
+        <h2>Our <span style="color: #a8a8a8;">Professionals</span></h2>
+        <center><h5 style="width: 400px;text-align: center;">Compassionate experts, dedicated to nurturing every children's journey.</h5></center>
+        <div class="doctorcards">
+            <!-- From Uiverse.io by Codewithvinay -->
+          
+
+            {% for docts in doctor %}
+            <div class="carddoc">
+                <img class="docdp" src="{{docts.image.url}}" alt="">
+                <h3>{{docts.name}}</h3>
+                <div class="details">
+                    <!-- <h4>{{docts.availabletime}}</h4> -->
+                    <h4>{{docts.hospitalname}}</h4>
+                    <!-- <h4>{{i.phonenumber}}</h4> -->
+                    <h4 style="color:#258EA6; font-weight: bold;">₹ {{docts.fees}}</h4>
+                </div>
+                <a href="mailto:abhinandhkn48@gmail.com" style="text-decoration: none;">
+                    <button class="bookbtn">
+                      <ion-icon name="mail"></ion-icon>
+                      Book Appointment
+                    </button>
+                  </a>
+                                 
+            </div>
+            {% endfor %}
+            
+            
+        </div>
+        <input type="text" name="" id="blog" style="border: none;outline: none;background-color: transparent;user-select: none;caret-color: transparent">
+    </div> 
+    <!-- blog  -->
+    <div  class="blog-container" >
+        <hr style="opacity: 0.2;">
+        <div class="empowertext">
+            <h1><span style="color: black;">Our</span> Blogs</h1>
+            <h4 style="width: 500px;text-align: center;">Access expert advice, tools, and resources designed to support individuals with autism and their caregivers</h4>
+        </div>
+        <div class="blog-grid" style="margin-top: 45px;">
+           {% for blog in doct %}
+          <div class="blog-card">
+            <img src="{{blog.image.url}}" alt="Blog Post 2">
+            <div class="blogcontent">
+                <h6 style="font-weight: 400;opacity: 0.5;">Jan 26, 2025</h6>
+                <h3>{{blog.title}}</h3>
+            <p class="paragraph">{{blog.description}}</p>
+            </div>
+            <button class="blogbutton more" onclick="readmore(this.parentNode)">Read More<ion-icon name="arrow-down-outline"></ion-icon></button>
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+    <input type="text" name="" id="games" style="border: none;outline: none;background-color: transparent;caret-color: transparent;">
+    <!-- blog end  -->
+     <!-- games -->
+      {% if request.user.is_authenticated %}
+     <div class="game-section" >
+        <div class="game-title">
+            <h2>Explore Fun Learning Games</h2>
+        </div>
+        <div class="game-container">
+            {% if NumberIdentification and NumberIdentification.is_visible %}
+            <div class="game-card" onclick="gameload()">
+                <a style="text-decoration: none;color: black;" href="{% url 'number' %}">
+                <div class="game-image">
+                    <img src="{% static 'images/math.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Math Adventure</h3>
+                    <p>Enhance your math skills through fun challenges and interactive gameplay.</p>
+                    <div class="game-button">
+                    </div>
+                </div>
+            </a>
+            </div>
+            {% else %}
+            <div class="game-card" style="opacity: 0.2;pointer-events: none;">
+                <a style="text-decoration: none;color: black;" >
+                <div class="game-image">
+                    <img src="{% static 'images/math.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Math Adventure</h3>
+                    <p>Enhance your math skills through fun challenges and interactive gameplay.</p>
+                    <div class="game-button">
+                    </div>
+                </div>
+            </a>
+            </div>
+            {% endif %}
+            
+            {% if animal_game and  animal_game.is_visible %}
+            <div class="game-card" onclick="gameload(this)">
+                <a style="text-decoration: none;color: black;" href="{% url 'ImageGame' %}">
+                <div class="game-image">
+                    <img src="{% static 'images/animalgame.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Find The Animal</h3>
+                    <p>Train your brain with exciting memory puzzles designed to improve focus.</p>
+                    <div class="game-button">
+                    </div>
+                </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="game-card" style="opacity: 0.2;pointer-events: none;">
+                <a style="text-decoration: none;color: black;">
+                <div class="game-image">
+                    <img src="{% static 'images/animalgame.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Find The Animal</h3>
+                    <p>Train your brain with exciting memory puzzles designed to improve focus.</p>
+                    <div class="game-button">
+                    </div>
+                </div>
+                </a>
+            </div>
+    {% endif %}
+
+
+  {% if ImagePuzzle and ImagePuzzle.is_visible %}
+            <div class="game-card" onclick="gameload(this)">
+                <a style="text-decoration: none;color: black;" href="{% url 'ImageTileGame' %}">
+                <div class="game-image">
+                    <img src="{% static 'images/puzzle.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Image Tile</h3>
+                    <p>Engage in logical thinking and problem-solving with interactive puzzles.</p>
+                </div>
+                </a>
+            </div>
+  {% else %}
+            <div class="game-card" style="opacity: 0.2;pointer-events: none;">
+                <a style="text-decoration: none;color: black;" >
+                <div class="game-image">
+                    <img src="{% static 'images/puzzle.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Image Tile</h3>
+                    <p>Engage in logical thinking and problem-solving with interactive puzzles.</p>
+                </div>
+                </a>
+            </div>
+        {% endif %}
+
+            {% if ObjectIdentification and ObjectIdentification.is_visible %}
+            <div class="game-card" onclick="gameload(this)">
+                <a style="text-decoration: none;color: black;" href="{% url 'puzzle' %}">
+                <div class="game-image">
+                    <img src="{% static 'images/fruitsgame.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Fruit Findr</h3>
+                    <p>Engage in logical thinking and problem-solving with interactive puzzles.</p>
+                </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="game-card" style="opacity: 0.2; pointer-events: none;">
+                <a style="text-decoration: none;color: black;">
+                <div class="game-image">
+                    <img src="{% static 'images/fruitsgame.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Fruit Findr</h3>
+                    <p>Engage in logical thinking and problem-solving with interactive puzzles.</p>
+                </div>
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    {% endif %}
+    
+     <!-- games end-->
+
+     <!-- video section ----------------------------------- -->
+      <div class="videosection">
+        <div class="videotext">
+            <h1>Watch Our <span style="color: #258EA6;">Videos</span></h1>
+            <h4 style="width: 400px;text-align: center;">Discover a wide range of programs designed to challenge and inspire you</h4>
+        </div>
+        <div class="videocards">
+            {% for v in videos %}
+            <div class="videocard">
+                <!-- <iframe class="iframev" width="300" height="200" src="{{v.video.url}}" frameborder="0" allowfullscreen></iframe> -->
+                 <video controls src="{{v.video.url}}"></video>
+                <h2>{{v.title}}</h2>
+                <p>{{v.description}}</p>
+            </div>
+            {% endfor %}
+            <!-- <div class="videocard">
+                <iframe class="iframev" width="300" height="200" src="https://www.youtube.com/embed/example" frameborder="0" allowfullscreen></iframe>
+                <h2>LearnAble Overview</h2>
+                <p>Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!</p>
+            </div>
+            <div class="videocard">
+                <iframe class="iframev" width="300" height="200" src="https://www.youtube.com/embed/example" frameborder="0" allowfullscreen></iframe>
+                <h2>LearnAble Overview</h2>
+                <p>Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!</p>
+            </div>
+            <div class="videocard">
+                <iframe class="iframev" width="300" height="200" src="https://www.youtube.com/embed/example" frameborder="0" allowfullscreen></iframe>
+                <h2>LearnAble Overview</h2>
+                <p>Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!Watch our latest video to learn more about our programs!</p>
+            </div> -->
+        </div>
+      </div>
+     <!-- video section end ----------------------------------- -->
+
+     <!-- footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h2 style="color: #258EA6;">LearnAble</h2>
+                <p>Empowering individuals with autism through resources, education, and community support.</p>
+            </div>
+    
+            <div class="footer-links">
+                <h3 style="color: #258EA6;">Quick Links</h3>
+                <ul>
+                    <li><a href="#Features">Features</a></li>
+                    <li><a href="#doctors">Doctors</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    {% if request.user.is_authenticated%}
+                    <li> <a href="#games">Games</a></li>
+                    <li><a href="{% url 'forum' %}">Forum</a></li>
+                    <li><a href="{% url 'parentDashboard' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-contact">
+                <h3 style="color: #258EA6;">Contact Us</h3>
+                <p>Email: support@autismhub.com</p>
+                <p>Phone: +91 9876 543210</p>
+            </div>
+
+            <div class="footer-contact">
+                <h3 style="color: #258EA6;">Help Line</h3>
+                <p>Need Support? <br> We’re Here to Help!
+                    If you have questions about autism, therapies, or daily challenges, our helpline provides instant assistance, Contact us for guidance.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 LearnAble. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+    function checklogin(){
+
+        var data = new FormData()
+
+        data.append("username", document.querySelector('.Username').value)
+        // data.append("email", document.querySelector('.email').value)
+        data.append("password", document.querySelector('.Password').value)
+
+
+
+        data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+        $.ajax({
+
+            method:"POST",
+            url:'/logins/',
+            processData:false,
+            contentType:false,
+            // MimeType:"multipart/form-data",
+            data:data,
+            success:function(res){
+                
+
+                if(res.messages == 0){
+
+                    location.reload()
+                    // alert("Signup successfull")
+                 
+                }
+                else{
+                    document.querySelector('.error1').style.display = "flex"
+
+                }
+
+
+            }
+        })
+    }
+function checkinput(){
+    var data = new FormData()
+
+data.append("fullname", document.querySelector('.fullname').value)
+
+
+
+data.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+$.ajax({
+
+    method:"POST",
+    url:'/checksignin/',
+    processData:false,
+    contentType:false,
+    // MimeType:"multipart/form-data",
+    data:data,
+    success:function(res){
+        
+
+        if(res.message == 0){
+
+            
+            document.querySelector('.error').style.display = "flex"
+            // alert("user already there...")
+            // location.reload()
+        }
+        else{
+            document.querySelector('.error').style.display = "none"
+
+        }
+
+
+    }
+})
+}
+
+ </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+    <script>
+        let count = 0;  // Initialize globally
+
+    function getCSRFToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+    }
+    // Fetch initial count from the backend
+    fetch("/update_game_count/", { method: "GET" })
+        .then(response => response.json())
+        .then(data => {
+            count = data.count || 0;
+            console.log("Initial Count:", count);
+        })
+        .catch(error => console.error("Error fetching count:", error));
+
+    function gameload() {
+        count++; // Increment count
+
+        fetch("/update_game_count/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()
+            },
+            body: JSON.stringify({ count: count })
+        })
+        .then(response => response.json())
+        .then(data => console.log("Updated Count:", data.new_count))
+        .catch(error => console.error("Error:", error));
+    }
+    </script>
+
+
+<script>
+    function closeChat(){
+      document.querySelector('.chatt_bot').classList.remove('active');
+    }
+    
+    
+    function senddatas(){
+    var data = new FormData();
+    data.append("sendmsg", document.querySelector('.msgsend').value);
+    data.append("csrfmiddlewaretoken", '{{ csrf_token }}');
+
+    $.ajax({
+        method: "POST",
+        url: '/chat_bot/',
+        processData: false,
+        contentType: false,
+        data: data,
+        success: function(res) {
+            var chatContainer = document.querySelector('.allmessages');
+
+            // Append user message (keep same design)
+            var chat = document.createElement('h6');
+            chat.classList.add('msgchatt');
+            chat.style.cssText = "border-radius: 15px; background-color: #ebebeb; display: flex; align-self: flex-end; color: rgb(0, 0, 0); padding: 10px;";
+            chat.innerText = res.user_msg;
+            chatContainer.appendChild(chat);
+
+            // Append bot message (keep same design)
+            var message = document.createElement('h6');
+            message.classList.add('msgchatt1');
+            message.style.cssText = "border-radius: 15px; display: flex; align-self: flex-start; padding: 10px;";
+            message.innerText = res.bot_msg;
+            chatContainer.appendChild(message);
+
+            // Speak the bot's response
+            speakMessage(res.bot_msg);
+
+            // Clear input and scroll to bottom
+            document.querySelector('.msgsend').value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    });
+}
+
+// Function to make bot speak the message
+function speakMessage(message) {
+    let speech = new SpeechSynthesisUtterance();
+    speech.text = message;
+    speech.lang = "en-US";  
+    speech.volume = 1;  
+    speech.rate = 1;  
+    speech.pitch = 1;  
+    window.speechSynthesis.speak(speech);
+}
+
+    
+        function chatt(){
+          var chatBot = document.querySelector('.chatt_bot');
+          chatBot.classList.toggle('active')
+          setTimeout(scrollToBottom, 100);
+          
+          }
+    
+    function scrollToBottom() {
+        var chatContainer = document.querySelector('.allmessages');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    </script>
+
+
+
+
+
+    <script>
+       document.addEventListener("DOMContentLoaded", function () {
+        if (sessionStorage.getItem("showWinAnimation") === "true") {
+            let content = document.getElementById("hiddenContent");
+            content.style.display = "flex"; // Show animation
+
+            setTimeout(function () {
+                content.style.display = "none"; // Hide after 4 seconds
+            }, 6000);
+
+            sessionStorage.removeItem("showWinAnimation"); // Prevent replay on refresh
+        }
+    });
+    </script>
+
+    
+<script>
+   function startVoiceRecognition() {
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+
+        // Change mic icon color when recording starts
+        const micIcon = document.getElementById('micIcon');
+        micIcon.style.color = 'red';
+
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('messageInput').value = transcript;
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Speech recognition error:", event.error);
+        };
+
+        recognition.onend = function() {
+            // Reset mic icon color when recording stops
+            micIcon.style.color = 'grey';
+        };
+    } else {
+        alert("Your browser does not support speech recognition.");
+    }
+}
+    </script>
+
+
+
+
+    
+    
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</body>
+</html>
+

@@ -1,0 +1,20 @@
+from django.contrib import admin
+from .models import*
+
+admin.site.register(AnimalImageGame)
+admin.site.register(ImagePuzzle)
+admin.site.register(Comment)
+admin.site.register(Chat_bot)
+admin.site.register(ObjectIdentification)
+admin.site.register(Post)
+admin.site.register(NumberIdentification)
+admin.site.register(GameCount)
+admin.site.register(Numbergame)
+admin.site.register(imagepuzzlegame)
+admin.site.register(imagetile)
+admin.site.register(animalgame)
+admin.site.register(Blog)
+admin.site.register(Doctors)
+admin.site.register(Feedback)
+admin.site.register(Faq)
+admin.site.register(Videosection)

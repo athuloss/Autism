@@ -1,0 +1,439 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Click Selection Game</title>
+  <!-- Google Fonts for modern typography -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" />
+  <style>
+    /* Reset & Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      
+      background-color: #fff;
+      color: #333;
+      line-height: 1.6;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Color Variables */
+    :root {
+      --primary-bg: #fff;
+      --accent-color: #258ea6;
+      --secondary-color: #25dbb8;
+      --light-bg: #f9f9f9;
+      --dark-text: #333;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Container & Layout */
+    .full_container {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      background-color: var(--primary-bg);
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    /* Navbar */
+    .navbar{
+position: relative;
+box-shadow: 1px 0.4px 0.4px rgba(0, 0, 0, 0.252);
+display: flex;
+align-items: center;
+justify-content: space-around;
+width: 100%;
+height: 80px;
+gap: 250px;
+z-index: 10;
+
+}
+.navbar a{
+text-decoration: none;
+font-size: 16px;
+color: black;
+padding: 5px;
+font-weight: 600;
+}
+.navbar a:hover{
+    color: #258EA6;
+}
+.navanimation{
+    width: 100%;
+    height: 40px;
+}
+.left{
+    display: flex;
+    gap: 10px;
+}
+.right{
+    display: flex;
+    gap:20px ;
+}
+.login{
+    border: none;
+    padding: 10px;
+    background-color: var(--seasalt);
+    color: var(--oaxfordblue);
+    border-radius: 10px;
+    font-weight: 600;
+}
+.signup{
+    border: none;
+    padding: 10px;
+    background-color:var(--oaxfordblue) ;
+    color: var(--seasalt);
+    border-radius: 10px;
+    font-weight: 600;
+}
+.left h1{
+    color: black;
+}
+
+    /* Game Section */
+    .games_full_wrapper {
+      margin-top: -40px;
+      padding: 30px;
+      background-color: #fff;
+      /* border-radius: 10px; */
+      width: 100%;
+      /* box-shadow: 0 4px 8px var(--shadow-color); */
+      position: relative;
+    }
+    .qus {
+      font-size: 22px;
+      margin-bottom: 30px;
+      color: var(--accent-color);
+    }
+    .qus h1 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .gameswrapper {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .gameswrapper img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gameswrapper img:hover {
+      transform: scale(1.05) translateY(-15px);
+      /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); */
+    }
+    #result {
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 20px;
+      color: var(--accent-color);
+    }
+    #timeLeft {
+      font-size: 16px;
+      color: var(--dark-text);
+      margin-bottom: 10px;
+    }
+
+    /* Next Game Button */
+    .next_game {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      background-color: var(--accent-color);
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: none;
+      align-items: center;
+      gap: 5px;
+      z-index: 150;
+    }
+    .next_game:hover {
+      background-color: var(--secondary-color);
+    }
+    .next_game h3 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    /* Body Animation */
+    .body_animation {
+      position: absolute;
+      top: 80px;
+      right: 20px;
+      z-index: 50;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .gameswrapper {
+        flex-direction: column;
+        align-items: center;
+      }
+      .next_game {
+        z-index: 150;
+        right: 50%;
+        transform: translateX(50%);
+      }
+    }
+    .wincontainer{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background-color: #00000057;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.losecontainer{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background-color: #00000057;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.wincard{
+    h1{
+        font-size: 40px;
+        color: white;
+    }
+}
+  </style>
+</head>
+<body>
+  <div class="wincontainer" style="display: none;">
+    <div class="wincard">
+        <h1>Hooray You are Correct</h1>
+    </div>
+</div>
+<div class="losecontainer" style="display: none;">
+    <div class="wincard">
+        <h1>Better Luck Next Time</h1>
+    </div>
+</div>
+
+  <div class="full_container">
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="left">
+            <h1>LearnAble</h1>
+            <img class="navanimation" src="{% static 'images/loading.gif' %}" alt=""> 
+        </div>
+        <div class="right">
+        <a href="">Home</a>
+        <a href="{% url 'home'  %}#Features">Features</a>
+        <a href="{% url 'home' %}#doctors">Doctors</a>
+        <a href="{% url 'home' %}#blog">Blog</a>
+        </div>
+    </div>
+
+
+    <!-- Game Content -->
+    <div class="container">
+        <div class="hero">
+            
+        </div>   
+    </div>
+      <div class="games_full_wrapper">
+        <div class="qus">
+          {% if game.answer == 'image1' %}
+            <h1>Q. Which one is  {{ game.image_1_label }}?</h1>
+            <input type="hidden" class="answer-text" value="{{ game.image_1_label }}">
+          {% elif game.answer == 'image2' %}
+            <h1>Q. Which one is  {{ game.image_2_label }}?</h1>
+            <input type="hidden" class="answer-text" value="{{ game.image_2_label }}">
+          {% elif game.answer == 'image3' %}
+            <h1>Q. Which one is  {{ game.image_3_label }}?</h1>
+            <input type="hidden" class="answer-text" value="{{ game.image_3_label }}">
+          {% elif game.answer == 'image4' %}
+            <h1>Q. Which one is  {{ game.image_4_label }}?</h1>
+            <input type="hidden" class="answer-text" value="{{ game.image_4_label }}">
+          {% endif %}
+        </div>
+        <p style="margin-top: -25px;margin-bottom: 50px;">Pick the correct option before the timer runs out!!</p>
+        
+
+        <div class="gameswrapper">
+          <img src="{{ game.image1.url }}" data-answer="{% if game.answer == 'image1' %}true{% else %}false{% endif %}" onclick="checkAnswer(this)" alt="Game Option 1">
+          <img src="{{ game.image2.url }}" data-answer="{% if game.answer == 'image2' %}true{% else %}false{% endif %}" onclick="checkAnswer(this)" alt="Game Option 2">
+          <img src="{{ game.image3.url }}" data-answer="{% if game.answer == 'image3' %}true{% else %}false{% endif %}" onclick="checkAnswer(this)" alt="Game Option 3">
+          <img src="{{ game.image4.url }}" data-answer="{% if game.answer == 'image4' %}true{% else %}false{% endif %}" onclick="checkAnswer(this)" alt="Game Option 4">
+        </div>
+        <hr style="opacity: 0.2;margin-top: 15px;margin-bottom: 15px;">
+        <h4 id="timeLeft" style="font-size: 25px;">Time Left: 60 seconds</h4>
+        <p id="result"></p>
+      
+      <div class="next_game" style="border-radius: 5px; bottom: 25px;">
+          <a href="{% url 'home' %}" onclick="showWinAnimation(event)">
+              <h3>Finish <ion-icon name="chevron-forward"></ion-icon></h3>
+          </a>  
+      </div>
+
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+  <dotlottie-player src="https://lottie.host/2069258b-92f8-4041-94e4-4aadeb4ec748/TDcWoL6znS.lottie" background="transparent" speed="1" style="width: 600px; height: 600px;position: absolute;bottom: -30px;display: flex;align-items: center;justify-content: center;left: 30%;display: none;z-index: 150;" class="balloon" loop autoplay></dotlottie-player>
+  <!-- Scripts -->
+  <script>
+let startTime;
+let gameResult = "";  
+let timerInterval;
+
+function getCSRFToken() {
+  return document.querySelector("meta[name='csrf-token']").getAttribute("content");
+}
+
+function startTimer() {
+  startTime = new Date();
+  let timeLeft = 60;
+  const timerDisplay = document.getElementById("timeLeft");
+
+  if (!timerDisplay) {
+    console.error(" Timer element not found!");
+    return;
+  }
+
+  timerDisplay.innerText = `Time Left: ${timeLeft} seconds`;
+
+  timerInterval = setInterval(() => {
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerDisplay.innerText = `Time Left: 0 seconds`;
+      gameResult = "lose";
+      alert("Time ended, you lose!");
+      // document.querySelector(".wincontainer").style.display='flex'
+      sendGameData(gameResult, getTimeTaken());  
+      location.reload()
+    } else {
+      timeLeft--;
+      timerDisplay.innerText = `Time Left: ${timeLeft} seconds`;
+    }
+  }, 3000);
+}
+
+function getTimeTaken() {
+  let endTime = new Date();
+  return Math.floor((endTime - startTime) / 1000);
+}
+
+function checkAnswer(img) {
+  clearInterval(timerInterval);
+
+  const isCorrect = img.getAttribute("data-answer") === "true";
+  const answerText = document.querySelector('.answer-text').value;
+  let message;
+  let timeTaken = getTimeTaken();
+
+  if (isCorrect) {
+    gameResult = "win";
+    sendGameData(gameResult, timeTaken);
+    // message = `Correct! This is an ${answerText}.`;
+    // window.location.href= "{% url 'home' %}";
+    document.querySelector('.balloon').style.display = "flex";     
+    document.querySelector('.next_game').style.display = "flex";     
+               
+    document.querySelector(".wincontainer").style.display='flex'
+  } else {
+    gameResult = "lose";
+    sendGameData(gameResult, timeTaken);
+    document.querySelector(".losecontainer").style.display='flex'
+    setTimeout(() => {
+    location.reload();
+}, 4000);
+    // message = `Oops! Try again.`;
+  }
+
+  // document.getElementById("result").innerText = message;
+  // speakText(message);
+  
+}
+
+function speakText(text) {
+  const speech = new SpeechSynthesisUtterance();
+  speech.text = text;
+  speech.lang = "en-US";
+  speech.volume = 1;
+  speech.rate = 0.9;
+  speech.pitch = 1.2;
+  window.speechSynthesis.speak(speech);
+}
+
+function sendGameData(result, timeTaken) {
+  let data = new FormData();
+  data.append("game_result", result);
+  data.append("time_taken", timeTaken);
+  data.append("csrfmiddlewaretoken", getCSRFToken());
+
+  $.ajax({
+    method: "POST",
+    url: "/imagepuzzlegame_gameresult/",
+    processData: false,
+    contentType: false,
+    data: data,
+    success: function(response) {
+      console.log(" Success:", response.message);
+    },
+    error: function(xhr, status, error) {
+      console.error(" AJAX Error:", xhr.responseText);
+    }
+  });
+}
+
+window.onload = startTimer;
+
+function goToNextGame() {
+  window.location.reload();
+}
+
+
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Ionicons for the next icon (optional) -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>
+    function showWinAnimation(event) {
+        event.preventDefault(); // Stop immediate redirect
+        sessionStorage.setItem("showWinAnimation", "true"); // Set flag
+        window.location.href = "{% url 'home' %}"; // Redirect to home
+    }
+</script>
+</body>
+</html>

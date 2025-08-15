@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autism Feedback Page</title>
+  <link rel="stylesheet" href="{% static 'css/feedbackpaage.css'%}">
+</head>
+<body>
+  <div class="navbar">
+    <div class="left">
+        <h1>LearnAble</h1>
+        <img class="navanimation" src="{% static 'images/loading.gif' %}" alt=""> 
+    </div>
+    <div class="right">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'home' %}#Features">Features</a>
+    <a href="{% url 'home' %}#doctors">Doctors</a>
+    <a href="{% url 'home' %}#blog">Blog</a>
+    <a href="{% url 'home' %}#games">Games</a>
+    {% if request.user.is_authenticated %}
+    
+    <a href="{% url 'forum' %}">Forum</a>
+    {% endif %}
+
+    {% if request.user.is_authenticated and not request.user.is_superuser %}
+    <a href="{% url 'parentDashboard' %}">Dashboard</a>
+{% endif %}
+
+
+{% if request.user.is_authenticated and request.user.is_superuser %}
+    <a href="{% url 'adminDashboard' %}">Dashboard</a>
+{% endif %}
+
+
+    <!-- {% if request.user.is_authenticated %}
+    {% if detection_running %}
+    <form action="{% url 'stop_gaze' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="signup" style="background-color: rgb(181, 65, 65);">Stop Gaze Detection</button>
+    </form>
+    {% else %}
+        <form action="{% url 'start_gaze' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="signup">Start Gaze Detection</button>
+        </form>
+    {% endif %} -->
+    <a href="{% url 'logouts' %}" class="login" style="padding: 1px 5px;"><button style="cursor: pointer;border: none;background-color: transparent;color: #258EA6;font-weight: 600;padding: 7px;" >Log Out</button></a>
+    {% else %}
+    <button onclick="showLogin()" style="cursor: pointer;" class="login">Log In</button>
+    <button onclick="showsignup()" style="cursor: pointer;" class="signup">Sign Up</button>
+    {% endif %}
+    </div>
+</div>
+  <div class="heading">
+    <h1>Autism Feedbacks</h1>
+    <h3>Below are the list of feedback from various users </h3>
+  </div>
+  <!-- <div class="filter">
+    <h3>Filter feedback Type:</h3>
+    <select id="listdropdown" class="listdropdown" onclick="feedbackFilter()">
+      <option value="new">New</option>
+      <option value="old">Old</option>
+    </select>
+  </div> -->
+  <form class="feedinput" method="post" action="{%  url 'data_feedback' %}">
+    {% csrf_token %}
+    <input type="text" id="search" placeholder="Enter your feedback" name="content" required>
+    <button type="submit">Send</button>
+  </form>
+  {% for feedback in feedback_data %}
+  <div class="feedbackcards">
+    <div class="feedbackcard" data-date="12/02/24">
+      <div class="top">
+        <div class="userdetails">
+          <img src="https://i.pinimg.com/736x/2a/7a/58/2a7a58dbad7e82818d5673f64e41648f.jpg" alt="">
+          <div class="usercourse">
+            <h3>{{feedback.user.username}}</h3>
+          </div>
+        </div>
+        <div class="fbdatetime">
+          <h3>{{feedback.date}}</h3>
+        </div>
+      </div>
+      <div class="feeddisplaycontainer">
+        <div class="feeddisplay">
+          <p>{{feedback.content}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <!-- <script>
+    function feedbackFilter() {
+      let dropdown = document.getElementById("listdropdown");
+      let filterValue = dropdown.value;
+      let feedbackCards = Array.from(document.querySelectorAll(".feedbackcard"));
+      let container = document.querySelector(".feedbackcards");
+
+      feedbackCards.sort((a, b) => {
+        let dateA = parseInt(a.getAttribute("data-date"));
+        let dateB = parseInt(b.getAttribute("data-date"));
+
+        return filterValue === "old" ? dateA - dateB : dateB - dateA;
+      });
+
+      // Clear and re-append sorted elements
+      container.innerHTML = "";
+      feedbackCards.forEach(card => container.appendChild(card));
+    }
+
+  </script> -->
+</body>
+
+</html>

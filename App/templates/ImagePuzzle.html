@@ -1,0 +1,521 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Image Tile Puzzle</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    margin: 0;
+    padding: 0;  
+}
+body{
+    font-family: "Poppins", serif;
+    overflow-y: hidden;
+}
+
+    /* nav  */
+
+    html{
+    scroll-behavior: smooth;
+}
+
+:root{
+--primary-color: #EEF1EF;
+--secondary-color: #25DBB8;
+--white:#FBFBF2;
+--seasalt:#FBFAF8;
+--oaxfordblue:#258EA6;
+--loginprimary: #4C6FFF;
+--logintext-primary: #333333;
+--logintext-secondary: #666666;
+--loginbackground: #FFFFFF;
+--logininput-border: #E5E7EB;
+--logininput-bg: #FFFFFF;
+--logincheckbox-size: 18px;
+--signupprimary: #4C6FFF;
+--signuptext-primary: #333333;
+--signuptext-secondary: #666666;
+--signupbackground: #FFFFFF;
+--signupinput-border: #E5E7EB;
+--signupinput-bg: #FFFFFF;
+--signuperror: #FF4D4D;
+}
+
+
+
+.navbar{
+position: fixed;
+box-shadow: 1px 0.4px 0.4px rgba(0, 0, 0, 0.252);
+display: flex;
+align-items: center;
+justify-content: space-around;
+width: 100%;
+padding: 20px;
+/* height: 480px; */
+gap: 250px;
+z-index: 10;
+
+}
+.navbar a{
+text-decoration: none;
+font-size: 16px;
+color: black;
+padding: 5px;
+font-weight: 500;
+}
+.navanimation{
+    width: 100%;
+    height: 40px;
+}
+.left{
+    display: flex;
+    gap: 10px;
+}
+.right{
+    display: flex;
+    gap:20px ;
+}
+.login{
+    border: none;
+    padding: 10px;
+    background-color: var(--seasalt);
+    color: var(--oaxfordblue);
+    border-radius: 10px;
+    font-weight: 600;
+}
+.signup{
+    border: none;
+    padding: 10px;
+    background-color:var(--oaxfordblue) ;
+    color: var(--seasalt);
+    border-radius: 10px;
+    font-weight: 600;
+}
+.left h1{
+    color: black;
+}
+ /* nav end  */
+
+ #result{
+    font-size: 28px;
+    font-weight: 800;
+    margin-top: 20px;
+    margin-bottom: 100px;
+
+}
+.full_container{
+    overflow-x: hidden;
+}
+
+  /* nav end  */
+
+    h1 {
+      text-align: center;
+    }
+    .container {
+      width: 600px; 
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      grid-gap: 2px;
+      background-color: #ffffff;
+      /* border: solid 5px rgb(16, 123, 173); */
+      border-radius: 10px;
+      box-shadow: 0 1px 3px;
+
+  
+    }
+    .tile {
+      width: 200px; 
+      height: 200px; 
+      border: 1px solid #5d5c5c;
+      background-image: url('{{game.image.url}}'); 
+      background-repeat: no-repeat;
+      background-size: 600px 400px;
+      /* object-fit: cover; 
+      object-fit: contain;  */
+      cursor: move;
+    }
+    .tile[data-index="1"] { background-position:   0px    0px; }
+    .tile[data-index="2"] { background-position: -200px    0px; }
+    .tile[data-index="3"] { background-position: -400px    0px; }
+    .tile[data-index="4"] { background-position:   0px -200px; }
+    .tile[data-index="5"] { background-position: -200px -200px; }
+    .tile[data-index="6"] { background-position: -400px -200px; }
+    .over {
+      outline: 2px dashed #f00;
+    }
+    #message {
+      text-align: center;
+      /* font-size: 20px;
+      margin-top: 20px;
+      height: 30px;
+       */
+      font-size: 30px;
+    font-weight: 800;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    color: #258EA6;text-shadow: 1px 1px 1px #000000;
+      
+    }
+    .controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #checkBtn{
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background-color: #258EA6;
+      color: white;
+      font-weight: 700;
+    }
+    #shuffleBtn{
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background-color: white;
+      color: #258EA6;
+      font-weight: 700;
+      border: solid 2px #258EA6;
+    }
+    /* #result{
+    font-size: 30px;
+    font-weight: 800;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    color: #258EA6;text-shadow: 1px 1px 3px #000000;
+} */
+    .games_full_wrapper{
+      margin-top: 50px;
+      position: absolute;
+       /* z-index: 1000; */
+      height: 95vh;
+      width: 100%;
+      /* backdrop-filter: blur(4px); */
+      /* background-color: #53919f45; */
+    }
+    .next_game{
+    display: none;
+    margin-left: 90%;
+    top: 600px;
+    position: absolute;
+    border-radius: 20px;
+    z-index: 999999;  
+    width: 80px;
+    padding: 10px 10px 10px 10px;
+    background-color: #258EA6;
+    color: white;
+    cursor: pointer;
+  }
+
+.next_game h3{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* justify-items: ; */
+
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.wincontainer{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background-color: #00000057;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+}
+.losecontainer{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background-color: #00000057;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.wincard{
+    h1{
+        font-size: 40px;
+        color: white;
+    }
+}
+    
+
+  </style>
+</head>
+<body>
+  <div class="wincontainer" style="display: none;">
+    <div class="wincard">
+        <h1>Hooray You are Correct</h1>
+    </div>
+</div>
+<div class="losecontainer" style="display: none;">
+    <div class="wincard">
+        <h1>Better Luck Next Time</h1>
+    </div>
+</div>
+
+  <div class="full_container">
+
+    <div class="navbar">
+      <div class="left">
+          <h1>LearnAble</h1>
+          <img class="navanimation" src="{% static 'images/loading.gif' %}" alt=""> 
+      </div>
+      <div class="right">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'home' %}#Features">Features</a>
+      <!-- <a href="#games">Games</a> -->
+      <a href="{% url 'home' %}#doctors">Doctors</a>
+      <a href="{% url 'home' %}#blog">Blog</a>
+      </div>
+      
+      
+    </div>
+    
+    
+    
+    <!-- game  -->
+    <div class="games_full_wrapper">
+
+      <h1 style="margin-top: 50px;color:#258EA6;text-shadow: 1px 1px 1px #000000;text-overflow: ellipsis;font-size: 40px;">
+        Image Tile Puzzle</h1>
+    <div class="container" id="puzzle" style="margin-top: 30px;"></div>
+    <div class="controls">
+      <button id="checkBtn">Check Order</button>
+      <button id="shuffleBtn">Shuffle</button>
+    </div>
+    <div style="margin-top: 20px; font-weight:600 ;" class="timer">
+      <center><p id="timeLeft">Time: 0 seconds</p></center>
+    </div>
+    <div id="message"></div>
+  
+
+   <a style="z-index: 10000;" href="{% url 'puzzle' %}"> <div class="next_game">
+      <h3 class="next">Next <ion-icon style="align-items: center;font-weight: 900;" name="chevron-forward"></ion-icon></h3>
+  </div></a>
+
+    </div>
+
+    <!-- <div class="container_animation">
+      <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+      <dotlottie-player src="https://lottie.host/0d759c6c-4a96-42d1-85e8-230072fce8af/ntEiwmTlHM.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>   
+    
+    </div> -->
+
+    
+    
+  </div>
+    
+    
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+  <dotlottie-player src="https://lottie.host/2069258b-92f8-4041-94e4-4aadeb4ec748/TDcWoL6znS.lottie" background="transparent" speed="1" style="width: 600px; height: 600px;position: absolute;bottom: -30px;display: flex;align-items: center;justify-content: center;left: 30%;display: none;z-index: 1000;" class="balloon" loop autoplay></dotlottie-player>
+    <script>
+      let startTime;
+let gameResult = "";
+const tileOrder = [1, 2, 3, 4, 5, 6];
+const container = document.getElementById('puzzle');
+const messageDiv = document.getElementById('message');
+let timerInterval; 
+
+function createTile(number) {
+  const tile = document.createElement('div');
+  tile.classList.add('tile');
+  tile.setAttribute('draggable', 'true');
+  tile.dataset.index = number;
+  return tile;
+}
+
+function renderPuzzle(order) {
+  container.innerHTML = '';
+  order.forEach(num => {
+    const tile = createTile(num);
+    container.appendChild(tile);
+  });
+  addDragAndDropListeners();
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+let dragSrcEl = null;
+function handleDragStart(e) {
+  dragSrcEl = this;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.outerHTML);
+  this.classList.add('dragElem');
+}
+
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  this.classList.add('over');
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+
+function handleDragLeave(e) {
+  this.classList.remove('over');
+}
+
+function handleDrop(e) {
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  if (dragSrcEl !== this) {
+    let dragHTML = dragSrcEl.outerHTML;
+    let dropHTML = this.outerHTML;
+    container.innerHTML = container.innerHTML.replace(dragHTML, 'temp-placeholder');
+    container.innerHTML = container.innerHTML.replace(dropHTML, dragHTML);
+    container.innerHTML = container.innerHTML.replace('temp-placeholder', dropHTML);
+    addDragAndDropListeners();
+  }
+  return false;
+}
+
+function handleDragEnd(e) {
+  this.classList.remove('over');
+}
+
+function addDragAndDropListeners() {
+  let tiles = container.querySelectorAll('.tile');
+  tiles.forEach(function(tile) {
+    tile.addEventListener('dragstart', handleDragStart, false);
+    tile.addEventListener('dragover', handleDragOver, false);
+    tile.addEventListener('dragleave', handleDragLeave, false);
+    tile.addEventListener('drop', handleDrop, false);
+    tile.addEventListener('dragend', handleDragEnd, false);
+  });
+}
+
+function checkOrder() {
+  clearInterval(timerInterval); 
+
+  const tiles = container.querySelectorAll(".tile");
+  let correct = true;
+
+  tiles.forEach((tile, index) => {
+    if (parseInt(tile.dataset.index, 10) !== index + 1) {
+      correct = false;
+    }
+  });
+
+  if (correct) {
+    messageDiv.textContent = "Success! Puzzle solved.";
+    gameResult = "win";
+    sendGameData(gameResult, getTimeTaken());
+    // alert("You, Won the Game")
+    document.querySelector('.wincontainer').style.display='flex'
+    // window.location.href= "{% url 'puzzle' %}";
+    setTimeout(() => {
+      document.querySelector('.balloon').style.display = "flex";  
+      document.querySelector('.next_game').style.display = "block";                
+              
+}, 100);
+  } else {
+    // messageDiv.textContent = "Fail! Puzzle not solved.";
+    // alert("Fail! Puzzle not solved.")
+    document.querySelector('.losecontainer').style.display='flex'
+    gameResult = "lose";
+    sendGameData(gameResult, getTimeTaken());
+    setTimeout(() => {
+    location.reload();
+}, 4000);
+  }
+
+  
+
+
+}
+
+document.getElementById('checkBtn').addEventListener('click', checkOrder);
+document.getElementById('shuffleBtn').addEventListener('click', function() {
+  shuffle(tileOrder);
+  renderPuzzle(tileOrder);
+  messageDiv.textContent = "";
+});
+
+shuffle(tileOrder);
+renderPuzzle(tileOrder);
+
+function getTimeTaken() {
+  let endTime = new Date();
+  return Math.floor((endTime - startTime) / 1000);
+}
+
+function startTimer() {
+  startTime = new Date();
+  let timeLeft = 60;
+  const timerDisplay = document.getElementById("timeLeft");
+  timerDisplay.innerText = `Time Left: ${timeLeft} seconds`;
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerDisplay.innerText = `Time Left: 0 seconds`;
+      alert("Time ended, you lose!");
+      gameResult = "lose";
+      sendGameData(gameResult, getTimeTaken());
+      setTimeout(() => {
+    location.reload();
+}, 3000);
+    } else {
+      timerDisplay.innerText = `Time Left: ${timeLeft} seconds`;
+    }
+  }, 1000);
+}
+
+function sendGameData(result, timeTaken) {
+  var data = new FormData();
+  data.append("game_result", result);
+  data.append("time_taken", timeTaken);
+  data.append("csrfmiddlewaretoken", getCSRFToken());
+
+  $.ajax({
+    method: "POST",
+    url: "/imagetile_gameresult/",
+    processData: false,
+    contentType: false,
+    data: data,
+    success: function(response) {
+      console.log(" Success:", response.message);
+    },
+    error: function(xhr, status, error) {
+      console.error(" AJAX Error:", xhr.responseText);
+    }
+  });
+}
+
+function getCSRFToken() {
+  return document.querySelector("meta[name='csrf-token']").getAttribute("content");
+}
+
+// Start the timer on page load
+window.onload = startTimer;
+
+  </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

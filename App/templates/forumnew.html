@@ -1,0 +1,528 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentw</title>
+    <link rel="stylesheet" href="{% static 'css/forumnew.css' %}">
+</head>
+<body>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            font-family: "Poppins", serif;
+            background-color: rgb(253, 250, 250);
+        }
+    input[type="text"] {
+flex: 1;
+    height: 30px;  
+    border: none; 
+    border-radius: 4px; 
+    font-size: 14px;  
+    outline: none;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+/* From Uiverse.io by neerajbaniwal */ 
+.btn-shine {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 12px 48px;
+  color: #fff;
+  background: linear-gradient(to right, #9f9f9f 0, #fff 10%, #868686 20%);
+  background-position: 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s infinite linear;
+  animation-fill-mode: forwards;
+  -webkit-text-size-adjust: none;
+  font-weight: 600;
+  font-size: 26px;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: "Poppins", sans-serif;
+}
+@-moz-keyframes shine {
+  0% {
+    background-position: 0;
+  }
+  60% {
+    background-position: 180px;
+  }
+  100% {
+    background-position: 180px;
+  }
+}
+@-webkit-keyframes shine {
+  0% {
+    background-position: 0;
+  }
+  60% {
+    background-position: 180px;
+  }
+  100% {
+    background-position: 180px;
+  }
+}
+@-o-keyframes shine {
+  0% {
+    background-position: 0;
+  }
+  60% {
+    background-position: 180px;
+  }
+  100% {
+    background-position: 180px;
+  }
+}
+@keyframes shine {
+  0% {
+    background-position: 0;
+  }
+  60% {
+    background-position: 180px;
+  }
+  100% {
+    background-position: 180px;
+  }
+}
+
+/* button{
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius:5px;
+    border: none;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px;
+    background-color: rgb(255, 255, 255); 
+    height: 30px;
+    width: 70px;
+} */
+
+
+.sidebar {
+    width: 260px;
+    background-color: #212529;
+    color: #f8f9fa;
+    position: fixed;
+    height: 100vh;
+    padding: 15px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    /* align-items: center; */
+    flex-direction: column;
+}
+.sidebar a {
+    display: block;
+    justify-content: center;
+    color: #f8f9fa;
+    text-decoration: none;
+    padding: 10px 65px;
+    margin: 8px 0;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+.sidebar a:hover {
+    background-color: #343a40;
+}
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+
+}
+
+.editedtext{
+  font-weight: inherit !important;
+  font-size: inherit !important;
+  color: black;
+}
+    </style>
+ 
+
+   
+    <!-- <div class="container" style="margin-bottom:100px;width: 100%;  display: flex;z-index: 10;align-items: flex-start; position: fixed; height: 100vh; overflow-y: auto;"> -->
+      <div class="bgimag" style="width: 100%; position: fixed;z-index: -1;">
+        <img src="{% static 'images/2964668.jpg' %}" style="width: 100%; object-fit: cover;opacity: 0.1;">
+      </div>
+      <div class="navbar">
+        <div class="left">
+            <h1>LearnAble</h1>
+            <img class="navanimation" src="{% static 'images/loading.gif' %}" alt=""> 
+        </div>
+        <div class="right">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'home' %}#doctors">Doctors</a>
+        <!-- <a href="{% url 'home' %}#blog">Blog</a> -->
+        <a href="{% url 'home' %}#games">Games</a>
+        <a onclick="postss()">Upload Post</a>
+        <!-- <a href="{% url 'forum' %}">Forum</a> -->
+        
+        
+        {% if request.user.is_authenticated and not request.user.is_superuser %}
+        <a href="{% url 'parentDashboard' %}">Dashboard</a>
+        {% endif %}
+        
+        
+        {% if request.user.is_authenticated and request.user.is_superuser %}
+        <a href="{% url 'adminDashboard' %}">Dashboard</a>
+        {% endif %}
+        
+        
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'logouts' %}" class="login" style="padding: 1px 5px;"><button style="cursor: pointer;border: none;background-color: transparent;color: #258EA6;font-weight: 600;padding: 7px;" >Log Out</button></a>
+        {% else %}
+        <button onclick="showLogin()" style="cursor: pointer;" class="login">Log In</button>
+        <button onclick="showsignup()" style="cursor: pointer;" class="signup">Sign Up</button>
+        {% endif %}
+      </div>
+    </div>
+    <div class="filtercontainer">
+      <form id="frm" action="{% url 'forum' %}" method="post">
+        {% csrf_token %}
+              <div class="form-group">
+                <!-- <div class="form-label">Category</div> -->
+                <select name="data" style="border: none; outline: none;padding: 10px;font-weight: 600;font-size: 12px;border-radius: 10px;border: 1px solid rgba(128, 128, 128, 0.053);cursor: pointer;">
+                  <option value="">Filter</option>
+                  <option value="Support & help">Support & help</option>
+                  <option value="Learning & Growth">Learning & Growth</option>
+                  <option value="Carrer & Living">Carrer & Living</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+              <button >Apply</button>
+            </form>
+    </div>
+
+        <div class="posts-container" style="width:100%; display: flex; flex-direction: column; align-items: center;justify-content: center; margin-top: 40px;gap: 20px;margin-bottom: 100px;">
+          {% for post in filtered %}
+            <div class="card"  data-post-id="{{ post.id }}" style="width: 60%;  background-color: white; border-radius: 5px; box-shadow: 0 1px 0 rgba(0,0,0,0.1);box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+ ">
+          
+              <div class="headsection" style="display: flex; justify-content: space-between; padding: 10px;width: 100%;">
+                <div class="belowsection" style="display: flex; gap: 10px; align-items: center;">
+                  <img src="{% static 'images/cat.jpg' %}" style="width: 30px; height: 30px; border-radius: 100%;" alt="User">
+                  <h6 style="font-size: 14px; font-weight: 400;">{{ post.author }}</h6>
+                </div>
+{% if request.user ==  post.author or request.user.is_superuser %}
+                <div class="s" style="display: flex; gap: 10px;">
+                  <ion-icon name="ellipsis-vertical" style="font-size: 17px; color: rgb(126, 126, 126);" class="dot" onclick="displaying(this)"></ion-icon>
+                  <h4 class="edit" style="display:none; font-weight: 500; cursor: pointer;" onclick="rechangetext(this)">Edit</h4>
+                  <h4 class="saveBtn" id="saveBtn" style="display:none; font-weight: 500; cursor: pointer;" onclick="savepost(this)">Save</h4>
+
+                  <a href="{% url 'delete' post.id %}"><h4 class="delete" style="display: none;margin-right: 30px; font-weight: 500; cursor: pointer;">Delete</h4></a>
+                </div>
+{% endif %}
+              </div>
+              <div class="headerimg"  style="position: relative;">
+                <input type="file"  class="new_imagepost" style="position: absolute; z-index: 10000; top: 45%;right: 35%; display: none;">
+                {% if post.image %}
+                  <img src="{{ post.image.url }}" style="object-fit: cover; width: 100%; height: 340px;" alt="Post image" class="imagessss">
+                {% elif post.video %}
+                  <video controls style="object-fit: cover; width: 100%; height: 340px;" class="imagessss">
+                    <source src="{{ post.video.url }}">
+                  
+                  </video>
+                {% endif %}
+              </div>
+           
+              <h6 class="post-title" style="font-size: 15px; font-weight: 450; padding: 10px;">{{ post.title }}</h6>
+      
+              <div class="undertext" style="padding-left: 10px; display: flex; flex-direction: column; gap: 20px;">
+               
+               
+              </div>
+              <h6 style="font-size: 14px; font-weight: 600; padding: 15px 20px; cursor: pointer;" onclick="cmts(this)">Comments ({{ post.comments.count }})</h6>
+              <div class="inputbox" style="width: 90%; background-color: #fff; border-radius: 5px; padding: 8px; display: flex;">
+                <form action="{% url 'add_comment' post.id %}" method="post" style="display: flex; width: 100%;">
+                  {% csrf_token %}
+                  <input type="text" name="content" placeholder="Enter your Comment" style="flex: 1; border: none; font-size: 14px; outline: none;">
+                  <button type="submit" style="border: none; background: none; cursor: pointer;">
+                    <ion-icon name="send-outline"></ion-icon>
+                  </button>
+                </form>
+              </div>
+              
+      
+
+              {% for comment in post.comments.all %}
+                {% if not comment.parent %}
+                  <div class="cmtn"  data-comment-id="{{ comment.id }}"  style="width: 90%; border-radius: 5px; background-color: #ffffff; display: none;margin-left: 20px;margin-bottom: 10px;  ">
+                    <div class="heading" style="display: flex; gap:5px;">
+                      <img src="{% static 'images/math.jpeg' %}" style="border-radius: 100%; height: 30px; width: 30px;" alt="User">
+                      <h6 style="font-size: 14px; font-weight: 400; color: black;">{{ comment.user.username }}</h6>
+                      <h6 style="font-size: 14px; font-weight: 400; color: grey;">replied to @ {{ comment.post.author }}</h6>
+                    </div>
+                    <div class="secc" style="display: flex; justify-content: space-between;">
+
+                      <p style="font-size: 14px; font-weight: 500; " class="thisiscomment">{{ comment.content }}</p>
+                      <div class="contorlls" style="display: flex; gap: 20px;">
+{% if request.user.is_authenticated and request.user.is_superuser  %}
+                        <a href="{% url 'deletecmt' comment.id %}"> <ion-icon name="trash"  style="color: grey;"></ion-icon></a> 
+{% endif %}
+{% if request.user.is_authenticated and request.user == comment.user %}
+                        <ion-icon name="create" onclick="editingcomment(this)"  style="color: grey;"></ion-icon>
+                        <ion-icon name="save" onclick="savethenewcomment(this)"  class="newsave" style="display: none;color: grey;"></ion-icon>
+{% endif %}                 
+
+                      </div>
+                    </div>
+                  
+                    <h6 style="font-size: 12px; font-weight: 400; cursor: pointer;" onclick="showReplyForm('{{ comment.id }}')">Reply</h6>
+                    
+                
+                    <div class="inp" style="padding: 10px; width: 100%; display: flex;">
+                      <form id="reply{{ comment.id }}" action="{% url 'add_comment' comment.post.id %}" method="post" style="display: none;">
+                        {% csrf_token %}
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <input type="text" name="content" placeholder="Enter Your Reply">
+                        <button type="submit" style="border: none; background: none; cursor: pointer;">
+                            <ion-icon name="send-outline"></ion-icon>
+                          </button>
+                      </form>
+                    </div>
+      
+                    {% if comment.replies.all %}
+                      {% include 'reply_loop.html' with replies=comment.replies.all %}
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+
+          
+          
+          
+          
+          
+         
+    <!-- </div>  -->
+
+
+    <div class="content" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 460px; background: #fff; padding: 25px; box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.3); border-radius: 12px; z-index: 1000;">
+      <div class="create-post" style="width: 100%;  background: #fff; ">
+          <div class="create-post-title" style="border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+              <h4 style="margin: 0; color: #222; font-size: 20px; font-weight: bold;">Create a New Post</h4>
+              <a href="{% url 'forum' %}" style="color: #000000; text-decoration: none; font-size: 24px; transition: 0.3s;">
+                  <ion-icon name="close-circle-outline" style="vertical-align: middle;"></ion-icon>
+              </a>
+          </div>
+  
+          <form id="postForm" method="post" action="{% url 'uploadpost' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+  
+              <div class="form-group" style="margin-bottom: 15px;">
+                  <label class="form-label" style="display: block; font-weight: bold; color: #444; font-size: 15px; margin-bottom: 5px;">Title</label>
+                  <input type="text" id="postTitle" class="form-input" placeholder="Enter post title" required name="title" 
+                         style="width: 95%;border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: #f9f9f9; transition: 0.3s; padding: 10px;">
+              </div>
+  
+          
+  
+              <div class="form-group" style="margin-bottom: 15px;">
+                  <label class="form-label" style="display: block; font-weight: bold; color: #444; font-size: 15px; margin-bottom: 5px;">Upload Photo/Video</label>
+                  <input type="file" id="postMedia" class="form-input" accept="image/*,video/*" name="images" 
+                         style="width: 95%;  border: 1px solid #ddd; border-radius: 8px; font-size: 14px; cursor: pointer; background: #f9f9f9; align-items: center; padding: 10px;">
+              </div>
+  
+              <div class="form-group" style="margin-bottom: 15px;">
+                  <label class="form-label" style="display: block; font-weight: bold; color: #444; font-size: 15px; margin-bottom: 5px;">Category</label>
+                  <select name="category" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: #f9f9f9; ">
+                      <option value="">Select a Category</option>
+                      <option value="Support & help">Support & Help</option>
+                      <option value="Learning & Growth">Learning & Growth</option>
+                      <option value="Career & Living">Career & Living</option>
+                      <option value="Others">Others</option>
+                  </select>
+              </div>
+  
+              <button type="submit" class="btn btn-primary" 
+                      style="width: 100%; background: linear-gradient(to right, #007bff, #0056b3); color: #fff; padding: 12px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.3s; font-weight: bold;">
+                  Create Post
+              </button>
+          </form>
+      </div>
+  </div>
+  
+  
+<script>
+    
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function showReplyForm(commentId) {
+    var form = document.getElementById("reply" + commentId);
+    if (!form) {
+        console.error("Reply form not found for comment ID:", commentId);
+        return;
+    }
+    form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
+}
+
+function cmts(ele) {
+  const card = ele.closest('.card');
+  if (card) {
+    card.querySelectorAll('.cmtn').forEach(comment => {
+      comment.style.display = "block";
+    });
+  }
+}
+
+
+    </script>
+    <script>
+        
+        function displaying(ele){
+
+   var cnt=ele.parentElement;
+cnt.querySelector('.edit').style.display="flex"
+cnt.querySelector('.delete').style.display="flex"
+cnt.querySelector('.dot').style.display="none"
+        }
+
+
+
+
+
+        function rechangetext(ele) {
+    var card = ele.closest('.card');
+
+    var title = card.querySelector('.post-title');
+    var thepost = card.querySelector('.imagessss');
+    var thefile = card.querySelector('.new_imagepost');
+
+    thepost.style.opacity = "0.5";
+    thefile.style.display = "block"; 
+
+    var titleText = title.innerText;
+    title.innerHTML = `<input type="text" id="newinput" value="${titleText}" class="editedtext" margin-bottom: 0.5rem;">`;
+
+    card.querySelector(".saveBtn").style.display = "block"; 
+    ele.style.display = "none";  
+}
+
+function savepost(ele) {
+    var card = ele.closest('.card');
+    var postId = card.getAttribute("data-post-id");  
+
+    var data = new FormData();
+    data.append("post_id", postId); 
+    data.append("title", card.querySelector("#newinput").value);
+
+    var fileInput = card.querySelector(".new_imagepost");
+    if (fileInput.files.length > 0) {
+        data.append("new_imagepost", fileInput.files[0]);
+    }
+
+    data.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+    $.ajax({
+        method: "POST",
+        url: "/update-post/",
+        processData: false,
+        contentType: false,
+        data: data,
+        success: function (res) {
+            if (res.message == 1) {  
+                card.querySelector(".post-title").innerHTML = data.get("title");
+
+                if (fileInput.files.length > 0) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        card.querySelector(".imagessss").src = e.target.result;
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+
+                card.querySelector(".saveBtn").style.display = "none";
+                card.querySelector(".delete").style.display = "none";
+                card.querySelector(".dot").style.display = "block";
+                card.querySelector(".imagessss").style.opacity = "1";
+
+                card.querySelector(".new_imagepost").style.display = "none";
+            } else {
+                alert("Error updating the post");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", error);
+            alert("Error updating the post");
+        }
+    });
+}
+
+
+
+
+
+
+
+function postss(){
+  document.querySelector('.content').style.display="block"
+  document.querySelector('.container').style.filter = "blur(10px)";
+
+}
+
+function editingcomment(ele) {
+    var card = ele.closest('.cmtn');
+    var valuess = card.querySelector('.thisiscomment');
+    var commentId = card.getAttribute("data-comment-id");  
+
+    var oldcomment = valuess.innerText.trim();
+    
+    valuess.innerHTML = `<input type="text" id="newcomment" value="${oldcomment}" data-comment-id="${commentId}">`;
+
+    card.querySelector('.newsave').style.display = "block";
+}
+
+function savethenewcomment(ele) {
+    var card = ele.closest('.cmtn');
+    var newCommentInput = card.querySelector("#newcomment");
+    var newCommentValue = newCommentInput.value;
+    var commentId = newCommentInput.getAttribute("data-comment-id");  
+
+    var data = new FormData();
+    data.append("newcomment", newCommentValue);
+    data.append("comment_id", commentId); 
+    data.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+    $.ajax({
+        method: "POST",
+        url: "/update-comment/",
+        processData: false,
+        contentType: false,
+        data: data,
+        success: function (res) {
+            if (res.message == 0) {
+                card.querySelector(".thisiscomment").innerText = newCommentValue;
+                card.querySelector('.newsave').style.display = "none";
+            }
+        }
+    });
+}
+
+    </script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<style>
+    .sidebar {
+    width: 220px;
+    background-color: #212529;
+    color: #f8f9fa;
+    position: fixed;
+    height: 100vh;
+    padding: 15px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar a {
+    display: block;
+    justify-content: center;
+    color: #f8f9fa;
+    text-decoration: none;
+    padding: 10px 55px;
+    margin: 8px 0;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #343a40;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    padding: 0 15px;
+}
+
+.dash_head a {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #f8f9fa;
+}
+
+/* Content Section */
+.content {
+    margin-left: 220px;
+    padding: 15px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 20px;
+    color: #212529;
+}
+</style>
+<body>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <div class="dash_head"><a href="{% url 'home' %}"><ion-icon name="home"></ion-icon>Home</a></div>
+        <div class="dash_head"><a href="#"><ion-icon name="game-controller"></ion-icon>Games</a></div>
+        <!-- <div class="dash_head" onclick="displayingblog()"><a href="#"><ion-icon name="cloud-upload" ></ion-icon> Blog</a></div> -->
+        <!-- <div class="dash_head" onclick="displayingdr()"><a href="#"><ion-icon name="cloud-upload" ></ion-icon> Doctor</a></div> -->
+    </div>
+    <div class="container">
+       
+         
+
+        <div class="game-section"  style="width: 70%; margin-left: 200px;">
+            <div class="game-title">
+                <h2>Explore Fun Learning Games</h2>
+            </div>
+            <div class="game-container">
+             
+                <div class="game-card" onclick="gameload()">
+                    <a style="text-decoration: none;color: black;" href="{% url 'number' %}">
+                        <div class="game-image">
+                            <img src="{% static 'images/math.jpeg' %}" alt="Math Adventure">
+                        </div>
+                        <div class="game-content">
+                            <h3>Math Adventure</h3>
+                    <p>Enhance your math skills through fun challenges and interactive gameplay.</p>
+                    <div class="game-button">
+                    </div>
+                </div>
+            </a>
+            <div class="sectionbutton" style="margin-top: -10px;">
+                {% if number %}           
+                {% if number.is_visible %}
+                <a href="{% url 'disverifingnumber' number.id %}">    <button style="border: none; border-radius: 5px; padding: 7px 50px; background-color: #bc200f;color: rgb(255, 255, 255);">Disabled</button></a>
+                {% else %}
+                <a href="{% url 'verifingnumber' number.id %}">    <button style="border: none; border-radius: 5px; padding: 7px 50px; background-color: #4d8d4d;color: white;">Enable</button></a>
+            {% endif %}
+            {% endif %}
+            </div>
+        </div>
+    
+        
+        
+        
+        
+        <div class="game-card" onclick="gameload(this)">
+            <a style="text-decoration: none;color: black;" href="{% url 'ImageGame' %}">
+                <div class="game-image">
+                    <img src="{% static 'images/animalgame.jpeg' %}" alt="Math Adventure">
+                </div>
+                <div class="game-content">
+                    <h3>Find The Animal</h3>
+                    <p>Train your brain with exciting memory puzzles designed to improve focus.</p>
+                    <div class="game-button">
+                    </div>
+                </div>
+            </a>
+            <div class="sectionbutton" style="margin-top: -10px;">
+                
+                {% if animal %}           
+                {% if animal.is_visible %}
+                <a href="{% url 'disverifing' animal.id %}">    <button style="border: none; border-radius: 5px; padding: 7px 50px; background-color: #bc200f;color: rgb(255, 255, 255);">Disabled</button></a>
+                {% else %}
+                <a href="{% url 'verifing' animal.id %}">    <button style="border: none; border-radius: 5px; padding: 7px 50px; background-color: #4d8d4d;color: white;">Enable</button></a>
+            {% endif %}
+            {% endif %}
+                
+            </div>
+        </div>
+            
+            <div class="game-card" onclick="gameload(this)">
+                <a style="text-decoration: none;color: black;" href="{% url 'ImageTileGame' %}">
+                    <div class="game-image">
+                        <img src="{% static 'images/puzzle.jpeg' %}" alt="Math Adventure">
+                    </div>
+                    <div class="game-content">
+                        <h3>Image Tile</h3>
+                        <p>Engage in logical thinking and problem-solving with interactive puzzles.</p>
+                    </div>
+                </a>
+                <div class="sectionbutton" style="margin-top: -10px;">
+                    {% if imagepuzzle %}           
+                    {% if imagepuzzle.is_visible %}
+                    <a href="{% url 'disverifingimage' imagepuzzle.id %}">    <button style="border: none; border-radius: 5px; padding: 7px 50px; background-color: #bc200f;color: rgb(255, 255, 255);">Disabled</button></a>
+                    {% else %}
+                    <a href="{% url 'verifingimage' imagepuzzle.id %}">    <button style="border: none; border-radius: 5px; padding: 7px 50px; background-color: #4d8d4d;color: white;">Enable</button></a>
+                {% endif %}
+                {% endif %}
+                </div>
+            </div>
+            
+            <div class="game-card" onclick="gameload(this)">
+                <a style="text-decoration: none;color: black;" href="{% url 'puzzle' %}">
+                    <div class="game-image">
+                        <img src="{% static 'images/fruitsgame.jpeg' %}" alt="Math Adventure">
+                    </div>
+                <div class="game-content">
+                    <h3>Fruit Findr</h3>
+                    <p>Engage in logical thinking and problem-solving with interactive puzzles.</p>
+                </div>
+            </a>
+            <div class="sectionbutton" style="margin-top: -10px;">
+                
+                {% if objectIdent %}           
+                {% if objectIdent.is_visible %}
+                <a href="{% url 'disverifingident' objectIdent.id %}">    <button style="border: none; border-radius: 5px; padding: 7px 50px; background-color: #bc200f;color: rgb(255, 255, 255);">Disabled</button></a>
+                {% else %}
+                <a href="{% url 'verifingident' objectIdent.id %}">    <button style="border: none; border-radius: 5px; padding: 7px 50px; background-color: #4d8d4d;color: white;">Enable</button></a>
+            {% endif %}
+            {% endif %}
+
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+</div>
+</body>
+</html>

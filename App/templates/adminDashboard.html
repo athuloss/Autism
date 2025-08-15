@@ -1,0 +1,798 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Add this inside <head> OR before </body> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+/* General Styles */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+body{
+    font-family: "Poppins", serif;
+
+    margin: 0;
+
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: #212529;
+    color: #f8f9fa;
+    position: fixed;
+    height: 100vh;
+    padding: 15px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar a {
+    display: block;
+    justify-content: center;
+    color: #f8f9fa;
+    text-decoration: none;
+    padding: 10px 55px;
+    margin: 8px 0;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #343a40;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    padding: 0 15px;
+}
+
+
+
+.dash_head a {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #f8f9fa;
+    /* width: 55%; */
+    margin-left: -10px;
+}
+
+/* Content Section */
+.content {
+    margin-left: 220px;
+    padding: 15px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 20px;
+    color: #212529;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+table th, table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+table th {
+    background-color: #f1f3f5;
+    font-weight: bold;
+    color: #495057;
+}
+
+table td {
+    background-color: #ffffff;
+    color: #6c757d;
+}
+
+table tr:hover td {
+    background-color: #f8f9fa;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.action-buttons a {
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.action-buttons .view {
+    background-color: #51cf66;
+    color: #ffffff;
+}
+
+.action-buttons .view:hover {
+    background-color: #40c057;
+}
+
+.action-buttons .edit {
+    background-color: #339af0;
+    color: #ffffff;
+}
+
+.action-buttons .edit:hover {
+    background-color: #228be6;
+}
+
+/* Blog Upload Container */
+#blogUploadContainer {
+    /* max-width: 500px; */
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    /* position: relative; */
+}
+
+#blogUploadContainer h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+#blogUploadContainer label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#blogUploadContainer input[type="text"],
+#blogUploadContainer textarea,
+#blogUploadContainer input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+#blogUploadContainer button {
+    width: 100%;
+    padding: 10px;
+    background-color: #258EA6;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#blogUploadContainer button:hover {
+    /* background-color: #357ae8; */
+}
+
+/* Uploading Wrapper */
+.uploadingwrapper {
+    top: 0;
+    position: absolute;
+    height: 100vh;
+    /* width:50%; */
+    backdrop-filter: blur(5px);
+    display: none;
+    margin-top: 70px;
+    /* align-items: center; */
+    /* justify-content: center; */
+    z-index: 100;
+}
+.uploadingwrapper1 {
+    top: 0;
+    position: absolute;
+    height: 100vh;
+    /* width:50%; */
+    backdrop-filter: blur(5px);
+    display: none;
+    margin-top: 70px;
+    /* align-items: center; */
+    /* justify-content: center; */
+    z-index: 100;
+}
+
+.closebtn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Game Stat Cards */
+.stat-card {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;  
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 210px;  
+    height: 110px; 
+    color: #212529;
+    transition: background-color 0.3s ease;
+}
+
+.stat-card:hover {
+    background-color: #f1f3f5;
+}
+
+.stat-card .test {
+    font-size: 14px; /* Slightly smaller font */
+}
+
+.stat-card h3 {
+    font-size: 1.4em;  
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-card p {
+    font-size: 1.5em; /* Reduced font size */
+    font-weight: bold;
+}
+
+.icon_circle {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 35px; /* Smaller icon circle */
+    width: 35px;  /* Smaller icon circle */
+    border-radius: 50%;
+    background-color: #21252924;
+    padding: 5px; /* Smaller padding */
+}
+
+
+/* Charts */
+.charts {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.chart-container {
+    width: 48%;
+    margin-top: 20px;
+}
+
+.chart-container canvas {
+    width: 100%;
+    height: 400px;
+}
+
+/* User Selection */
+.user-selection {
+    margin: 20px 0;
+}
+
+.user-selection label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.user-selection select {
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+.user-selection button {
+    padding: 8px 16px;
+    background-color: #51cf66;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.user-selection button:hover {
+    background-color: #40c057;
+}
+.stats{
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+}
+.played-label{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+input{
+    padding: 10px 25px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 1px solid grey;
+}
+label{
+    
+    margin-top: 5px;
+}
+#blogUploadContainer {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  #blogUploadContainer h2 {
+    margin-top: 0;
+    text-align: center;
+  }
+  #blogUploadContainer label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  #blogUploadContainer input[type="text"],
+  #blogUploadContainer textarea,
+  #blogUploadContainer input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+  }
+  #blogUploadContainer button {
+    width: 100%;
+    padding: 10px;
+    background-color:#258EA6;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  #blogUploadContainer button:hover {
+    /* background-color: #357ae8; */
+  }
+.uploadingwrapper{
+    top: 0;
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    backdrop-filter: blur(5px);
+    display: none;
+    z-index: 100;
+}
+.uploadingwrapper1{
+    top: 0;
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    backdrop-filter: blur(5px);
+    display: none;
+    z-index: 100;
+}
+.closebtn{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+
+.icon_circle{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    background-color: #21252924;
+}
+</style>
+</head>
+<body>
+<!-- videiowrapper---------------------------------- -->
+
+<div class="uploadingwrapper1" id="uploadingwrapper2">
+    <div id="blogUploadContainer">
+       <a href="{% url 'adminDashboard' %}"> <h1 class="closebtn" onclick="closebtn()"><ion-icon name="close-outline"></ion-icon></h1></a>
+        <h2>Add Videos</h2>
+        <form id="blogUploadForm" action="{% url 'videosection' %}" method="post" enctype="multipart/form-data">
+          <!-- Django CSRF token -->
+          {% csrf_token %}
+          
+
+          <label for="videoUpload">Video File Upload:</label>
+          <input type="file" id="videoUpload" name="video_file" accept="video/*" required>
+               
+       
+          <label for="heading">Title</label>
+          <input type="text" id="heading" name="title" placeholder="Enter Title" required>
+          
+
+          <label for="heading">Description</label>
+          <input type="text" id="heading" name="desc" placeholder="Enter Description" required>
+          
+    
+          <button type="submit">Upload Video</button>
+        </form>
+      </div>
+    
+</div>
+
+<!-- videiowrapper end ---------------------------------- -->
+
+
+    
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <div class="dash_head"><a href="{% url 'home' %}"><ion-icon name="home"></ion-icon>Home</a></div>
+        <div class="dash_head"><a href="{% url 'gamecontrol' %}"><ion-icon name="game-controller"></ion-icon>Games</a></div>
+        <div class="dash_head" onclick="displayingblog()"><a href="#"><ion-icon name="cloud-upload" ></ion-icon> Blog</a></div>
+        <div class="dash_head" onclick="displayingdr()"><a href="#"><ion-icon name="cloud-upload" ></ion-icon> Doctor</a></div>
+        <div class="dash_head" onclick="displayingvideo(uploadingwrapper1)"><a href="#"><i class="ri-video-line"></i>Add Videos</a></div>
+    </div>
+    <div class="content">
+        <div class="topbar">
+            <h1>Admin Dashboard</h1>
+        </div>
+    
+        <!-- User Selection for Admin -->
+        <div class="user-selection">
+            <label for="userSelect">Select User:</label>
+            <select id="userSelect">
+                <option value="">--Select User--</option>
+                {% for user in profile %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                {% empty %}
+                    <option value="">No users found</option>
+                {% endfor %}
+            </select>
+            
+            <!-- <button onclick="fetchUserGameData()">View User's Game Data</button> -->
+        </div>        
+    
+        <!-- Stats Section with Charts -->
+        <div class="stats">
+            <div class="stat-card" style="background-color: #b53b3f;color: white;">
+                <div class="test">
+                    <h3>Math Adventure</h3>
+                    <p id="game1_count">0</p>
+                </div>
+                <div class="icon_circle"><ion-icon name="game-controller"></ion-icon></div>
+            </div>
+            <div class="stat-card" style="background-color:#50a2ee;color: white;">
+                <div class="test">
+                    <h3>Fruit Finder</h3>
+                    <p id="game2_count">0</p>
+                </div>
+                <div class="icon_circle"><ion-icon name="game-controller"></ion-icon></div>
+            </div>
+            <div class="stat-card" style="background-color:#5b2a86;color: white;">
+                <div class="test">
+                    <h3>Image Puzzle</h3>
+                    <p id="game3_count">0</p>
+                </div>
+                <div class="icon_circle"><ion-icon name="game-controller"></ion-icon></div>
+            </div>
+            <div class="stat-card" style="background-color: #e3879e;color: white;">
+                <div class="test">
+                    <h3>Find The Animal</h3>
+                    <p id="game4_count">0</p>
+                </div>
+                <div class="icon_circle"><ion-icon name="game-controller"></ion-icon></div>
+            </div>
+        </div>
+    
+        <div class="charts">
+            <div class="chart-container">
+                <h3>Game Performance Analysis: Bar Chart</h3>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Math Adventure - Time Analysis</h3>
+                <canvas id="mathChart"></canvas>          
+            </div>
+            <div class="chart-container">
+                <h3>Fruit Finder - Time Analysis</h3>   
+                <canvas id="fruitChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Image Puzzle - Time Analysis</h3>   
+                <canvas id="imageChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Find The Animal - Time Analysis</h3>   
+                <canvas id="animalChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+        <div class="uploadingwrapper" id="uploadingwrapper">
+            <div id="blogUploadContainer">
+                <a href="{% url 'adminDashboard' %}"> <h1 class="closebtn" onclick="closebtn()"><ion-icon name="close-outline"></ion-icon></h1></a>
+                <h2>Upload Post</h2>
+                <form id="blogUploadForm" action="{% url 'blogview' %}" method="post" enctype="multipart/form-data">
+                  <!-- Django CSRF token -->
+                  {% csrf_token %}
+                  
+                  <!-- Image Upload Field (moved above the heading field) -->
+                  <label for="imageUpload">Image Upload:</label>
+                  <input type="file" id="imageUpload" name="image" accept="image/*" required>
+                  
+                  <!-- Heading Field -->
+                  <label for="heading">Heading:</label>
+                  <input type="text" id="heading" name="title" placeholder="Enter blog heading" required>
+                  
+                  <!-- Description Field -->
+                  <label for="description">Description:</label>
+                  <textarea id="description" name="description" placeholder="Enter blog description" rows="5" required ></textarea>
+                  
+                  <!-- Submit Button -->
+                  <button type="submit">Upload Blog</button>
+                </form>
+              </div>
+        </div>
+            
+        
+
+
+
+        <div class="uploadingwrapper1" id="uploadingwrapper1">
+            <div id="blogUploadContainer">
+               <a href="{% url 'adminDashboard' %}"> <h1 class="closebtn" onclick="closebtn()"><ion-icon name="close-outline"></ion-icon></h1></a>
+                <h2>Add Doctors</h2>
+                <form id="blogUploadForm" action="{% url 'doctorview' %}" method="post" enctype="multipart/form-data">
+                  <!-- Django CSRF token -->
+                  {% csrf_token %}
+                  
+                  <!-- Image Upload Field (moved above the heading field) -->
+                  <label for="imageUpload">Image Upload:</label>
+                  <input type="file" id="imageUpload" name="image" accept="image/*" required>
+                  
+               
+                  <label for="heading">Name</label>
+                  <input type="text" id="heading" name="name" placeholder="Enter name" required>
+                  
+
+                  <label for="heading">Fees</label>
+                  <input type="number" id="heading" name="fees" placeholder="Enter fees" required>
+                  
+                  <label for="heading">Time</label>
+                  <input type="Time" id="heading" name="availabletime" placeholder="Enter Time" required>
+                  
+                  <label for="heading">Hospital name</label>
+                  <input type="text" id="heading" name="hospitalname" placeholder="Enter hospital name" required>
+                  
+             
+                  <!-- Description Field -->
+                 
+                  <!-- Submit Button -->
+                  <button type="submit">Upload Doctor</button>
+                </form>
+              </div>
+            
+        </div>
+
+
+   
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        
+  // Declare chart instances globally
+  const charts = {
+      barChart: null,
+      mathChart: null,
+      fruitChart: null,
+      imageChart: null,
+      animalChart: null
+    };
+
+    // Bar Chart
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    charts.barChart = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Math Adventure', 'Fruit Finder', 'Image Puzzle', 'Find The Animal'],
+        datasets: [
+          {
+            label: 'Wins',
+            data: [0, 0, 0, 0],
+            backgroundColor: 'rgba(76, 175, 80, 0.8)',
+            borderWidth: 1
+          },
+          {
+            label: 'Losses',
+            data: [0, 0, 0, 0],
+            backgroundColor: 'rgba(244, 67, 54, 0.8)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    // Line Chart setup and chart instance storage
+    function createLineChart(canvasId, gameTitle, timeData) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+
+      // Destroy the previous chart instance if exists
+      if (charts[canvasId]) {
+        charts[canvasId].destroy();
+      }
+
+      // Create a new line chart with the provided data
+      charts[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: timeData.map((_, i) => `Session ${i + 1}`),
+          datasets: [{
+            label: `${gameTitle} - Time Taken`,
+            data: timeData,
+            backgroundColor: 'rgba(100, 181, 246, 0.2)',
+            borderColor: '#42a5f5',
+            borderWidth: 2,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    // Fetch user game data via AJAX and update charts and stats
+    function fetchUserGameData() {
+      var userId = $("#userSelect").val();
+      if (!userId) {
+        alert("Please select a user!");
+        return;
+      }
+
+      console.log("Fetching data for user:", userId);
+
+      $.ajax({
+        url: `/get-user-game-data/${userId}/`,
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          console.log("User Game Data:", data);
+
+          if (!data.results || !data.time_taken) {
+            alert("Invalid data received!");
+            return;
+          }
+
+          updateBarChart(data.results);
+          updateLineCharts(data.time_taken);
+          updateStats(data.results);
+        },
+        error: function(xhr, status, error) {
+          console.error("Error fetching user data:", error);
+          alert("Failed to load game data!");
+        }
+      });
+    }
+
+    // Update Bar Chart with new data
+    function updateBarChart(resultsData) {
+      console.log("Updating Bar Chart with:", resultsData);
+      charts.barChart.data.datasets[0].data = resultsData.map(game => game[0]); // Wins
+      charts.barChart.data.datasets[1].data = resultsData.map(game => game[1]); // Losses
+      charts.barChart.update();
+    }
+
+    // Update Line Charts with new data
+    function updateLineCharts(timeData) {
+      console.log("Updating Line Charts with:", timeData);
+      createLineChart("mathChart", "Math Adventure", timeData?.Numbergame || []);
+      createLineChart("fruitChart", "Fruit Finder", timeData?.imagepuzzlegame || []);
+      createLineChart("imageChart", "Image Puzzle", timeData?.imagetile || []);
+      createLineChart("animalChart", "Find The Animal", timeData?.animalgame || []);
+    }
+
+    // Update the stats UI with total games played
+    function updateStats(resultsData) {
+      console.log("Updating Stats with:", resultsData);
+      if (!resultsData || resultsData.length < 4) {
+        console.error("Invalid game stats data:", resultsData);
+        return;
+      }
+      let game1_total = resultsData[0][0] + resultsData[0][1];
+      let game2_total = resultsData[1][0] + resultsData[1][1];
+      let game3_total = resultsData[2][0] + resultsData[2][1];
+      let game4_total = resultsData[3][0] + resultsData[3][1];
+
+      document.getElementById("game1_count").innerHTML = `<span class="played-label">Played times:</span> ${game1_total}`;
+      document.getElementById("game2_count").innerHTML = `<span class="played-label">Played times:</span> ${game2_total}`;
+      document.getElementById("game3_count").innerHTML = `<span class="played-label">Played times:</span> ${game3_total}`;
+      document.getElementById("game4_count").innerHTML = `<span class="played-label">Played times:</span> ${game4_total}`;
+      console.log("Stats updated successfully!");
+    }
+
+    $(document).ready(function() {
+  // 1. Create empty line charts immediately
+  createLineChart("mathChart", "Math Adventure", []);       // or some placeholder data
+  createLineChart("fruitChart", "Fruit Finder", []);
+  createLineChart("imageChart", "Image Puzzle", []);
+  createLineChart("animalChart", "Find The Animal", []);
+
+  // 2. After user selects from dropdown, fetch new data and update
+  $("#userSelect").change(function() {
+    fetchUserGameData();
+  });
+});
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    
+    <script>
+        function displayingblog(){
+            document.querySelector('.uploadingwrapper').style.display="block"
+        }
+
+        function displayingdr(){
+            document.querySelector('.uploadingwrapper1').style.display="block"
+        }
+
+        function displayingvideo(){
+            document.getElementById("uploadingwrapper2").style.display="block"
+        }
+    </script>
+</body>
+</html>

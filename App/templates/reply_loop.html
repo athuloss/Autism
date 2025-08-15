@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Replies Edit Example</title>
+  <link rel="stylesheet" href="{% static 'css/forumnew.css' %}">
+</head>
+<body>
+
+  {% for reply in replies %}
+  <!-- Add a data attribute with the comment ID -->
+  <div class="reply" data-comment-id="{{ reply.id }}" style="background-color: #ffffff; border-radius: 5px;margin-bottom: 20px;">
+    <div class="reply-header" style="display: flex; align-items: center; gap: 10px;">
+      <img src="{% static 'images/cat.jpg' %}" alt="User" style="border-radius: 100%; width: 30px; height: 30px;">
+      <div class="row" style="display: flex;">
+        <h6 style="font-size: 14px; font-weight: 400; color: black;">{{ reply.user.username }}</h6>
+        <h6 style="font-size: 14px; font-weight: 400; color: grey;">&nbsp;replied to @ {{ reply.post.author.username }}</h6>
+      </div>
+    </div>
+
+    <!-- This container holds both the reply text and controls -->
+    <div class="secc" style="display: flex; justify-content: space-between; align-items: center;">
+      <!-- Use a unique class (.thisisreply) for reply text -->
+      <h5 style="font-size: 12px; font-weight: 500; margin-top: 10px;" class="thisisreply">{{ reply.content }}</h5>
+      <div class="contorlls" style="display: flex; gap: 20px;">
+        {% if request.user.is_authenticated and request.user.is_superuser %}
+        <a href="{% url 'deletecmt' reply.id %}">
+          <ion-icon name="trash" style="color: grey;"></ion-icon>
+        </a>
+        {% endif %}
+        {% if request.user.is_authenticated and  request.user == reply.user  %}
+        <ion-icon name="create" onclick="editingReply(this)"  style="color: grey;"></ion-icon>
+        <ion-icon name="save" onclick="saveReply(this)" class="newsave" style="display:none;color: grey;"></ion-icon>
+        {% endif %}
+      </div>
+    </div>
+      
+    <!-- Button to toggle reply form for this reply -->
+    <h6 style="font-size: 12px; font-weight: 400; cursor: pointer;" onclick="showReplyForm('{{ reply.id }}')">Reply</h6>
+      
+    <!-- Reply form for nested reply (initially hidden) -->
+    <div class="reply-form" style="display: flex; width: 100%;">
+      <form id="reply{{ reply.id }}" action="{% url 'add_comment' reply.post.id %}" method="post" style="display: none; width: 100%;">
+        {% csrf_token %}
+        <input type="hidden" name="parent_id" value="{{ reply.id }}">
+        <input type="text" name="content" placeholder="Enter your reply" style="flex: 1;">
+        <button type="submit" style="border: none; background: none; cursor: pointer;">
+          <ion-icon name="send-outline"></ion-icon>
+        </button>
+      </form>
+    </div>
+
+    {% if reply.replies.all %}
+      {% include 'reply_loop.html' with replies=reply.replies.all %}
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // --- Editing function for replies ---
+    function editingReply(ele) {
+      // Get the reply container.
+      var container = ele.closest('.reply');
+      // Target the reply text element.
+      var replyElement = container.querySelector('.secc .thisisreply');
+      var oldText = replyElement.innerText.trim();
+      
+      // Replace the reply text with an input field.
+      replyElement.innerHTML = `<input type="text" class="newreply" value="${oldText}">`;
+      
+      // Show the save icon.
+      container.querySelector('.secc .newsave').style.display = "block";
+    }
+
+    // --- Save function for replies ---
+    function saveReply(ele) {
+      var container = ele.closest('.reply');
+      // Get the comment ID from the data attribute.
+      var commentId = container.getAttribute("data-comment-id");
+      // Find the input field.
+      var inputField = container.querySelector(".secc .newreply");
+      if (!inputField) {
+        console.error("Input field not found in this reply container");
+        return;
+      }
+      var newReplyText = inputField.value;
+      
+      var data = new FormData();
+      data.append("newcomment", newReplyText);
+      data.append("comment_id", commentId);
+      data.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+      
+      $.ajax({
+        method: "POST",
+        url: "/update_comment_replay/",
+        processData: false,
+        contentType: false,
+        data: data,
+        success: function (res) {
+          if (res.message == 0) {
+            container.querySelector(".secc .thisisreply").innerText = newReplyText;
+            container.querySelector('.secc .newsave').style.display = "none";
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error("AJAX error:", error);
+        }
+      });
+    }
+
+    // --- Optional: Toggle reply form visibility ---
+    function showReplyForm(replyId) {
+      var form = document.getElementById("reply" + replyId);
+      if (!form) {
+        console.error("Reply form not found for reply ID:", replyId);
+        return;
+      }
+      form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
+    }
+  </script>
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

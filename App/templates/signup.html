@@ -1,0 +1,390 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autism Detection Project - Sign Up</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            /* height: 200px; */
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-circle {
+            fill: none;
+            stroke: #4f46e5;
+            stroke-width: 4;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 377;
+            animation: logo-animation 2s ease forwards;
+        }
+
+        .logo-puzzle {
+            fill: #4f46e5;
+            opacity: 0;
+            transform-origin: center;
+            animation: puzzle-animation 1s ease forwards 1s;
+        }
+
+        @keyframes logo-animation {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes puzzle-animation {
+            from {
+                opacity: 0;
+                transform: scale(0.5) rotate(-45deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        h1 {
+            color: #4f46e5;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4b5563;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4338ca;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <svg viewBox="0 0 100 100">
+                <circle class="logo-circle" cx="50" cy="50" r="45" />
+                <path class="logo-puzzle" d="M35,35 L50,35 L50,20 L65,20 L65,35 L80,35 L80,50 L65,50 L65,65 L50,65 L50,80 L35,80 L35,65 L20,65 L20,50 L35,50 Z" />
+            </svg>
+        </div>
+        <h1>Sign Up</h1>
+        <form>
+            <div class="input-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" required pattern="^[A-Za-z\s]+$" 
+                title="Full name should only contain letters">
+            </div>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required pattern="^[A-Za-z\s]+$" 
+                title="Username is not valid">
+            </div>
+            <div class="input-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" required  pattern="^(?!0{10}$)\d{10}$" 
+                title="Phone number must be 10 digits">
+            </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required title="Please enter a valid email address">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required pattern="^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$" 
+                title="Password must be at least 7 characters long, include letters, digits, and special characters">
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+</body>
+</html>
+ -->
+
+ {% load static %}
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Create Account</title>
+    <style>
+        :root {
+            --signupprimary: #4C6FFF;
+            --signuptext-primary: #333333;
+            --signuptext-secondary: #666666;
+            --signupbackground: #FFFFFF;
+            --signupinput-border: #E5E7EB;
+            --signupinput-bg: #FFFFFF;
+            --signuperror: #FF4D4D;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #F0F4F8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .signupcontainer {
+            background: var(--signupbackground);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .signupillustration {
+            flex: 1;
+            background-color: #F8FAFC;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signupillustration img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .signupform-container {
+            flex: 1;
+            padding: 3rem;
+            min-width: 320px;
+        }
+
+        .signuph1 {
+            color: var(--signuptext-primary);
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .signupsubtitle {
+            color: var(--signuptext-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+
+        .signupform-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .signupform-group {
+            flex: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .signupform-group label {
+            display: block;
+            color: var(--signuptext-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .signupform-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--signupinput-border);
+            border-radius: 8px;
+            background: var(--signupinput-bg);
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .signupform-group input:focus {
+            outline: none;
+            border-color: var(--signupprimary);
+        }
+
+        .terms {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+
+        .terms input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: var(--signupprimary);
+        }
+
+        .terms label {
+            color: var(--signuptext-secondary);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .terms a {
+            color: var(--signupprimary);
+            text-decoration: none;
+        }
+
+        .sign-up-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--signupprimary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 1rem;
+        }
+
+        .sign-up-btn:hover {
+            background: #3B5CD9;
+        }
+
+        .login-link {
+            text-align: center;
+            color: var(--signuptext-secondary);
+            font-size: 0.875rem;
+        }
+
+        .login-link a {
+            color: var(--signupprimary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .loginillustration {
+                display: none;
+            }
+
+            .loginform-container {
+                padding: 2rem;
+            }
+
+            .loginform-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signupcontainer">
+        <div class="signupillustration">
+            <img src="{% static "images/people-playing-ludo-game-b.png" %}" alt="Login illustration">
+        </div>
+        <div class="signupform-container">
+            <h1 class="loginh1">Create Account</h1>
+            <p class="signupsubtitle">Join us today! Please fill out the form below to get started.</p>
+            <form method="post" name="signup"> 
+                    <div class="signupform-group">
+                        <label for="firstName">Full Name</label>
+                        <input type="text" id="firstName" required>
+                    </div> 
+                <div class="signupform-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="signupform-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="signupterms">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+                <button type="submit" class="sign-up-btn">Create Account</button>
+                <div class="login-link">
+                    Already have an account? <a href="#" onclick="showLogin()">Log in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

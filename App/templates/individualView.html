@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+    body {
+        margin: 0;
+        font-family: "Poppins", serif;
+
+    background-color: #f8f9fa;
+    color: #212529;
+}
+.sidebar {
+    width: 220px;
+    background-color: #212529;
+    color: #f8f9fa;
+    position: fixed;
+    height: 100vh;
+    padding: 15px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+.sidebar a {
+    display: block;
+    justify-content: center;
+    color: #f8f9fa;
+    text-decoration: none;
+    padding: 10px 65px;
+    margin: 8px 0;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+.sidebar a:hover {
+    background-color: #343a40;
+}
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+
+}
+.dash_head a{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 15px;
+}
+.topbar {
+    display: flex;
+       justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.topbar h1 {
+    margin: 0;
+    font-size: 20px;
+    color: #212529;
+}
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.stat-card {
+    justify-content: space-between;
+    /* padding: 100px  80px; */
+    flex: 1;
+    margin: 0 5px;
+    padding: 15px;
+    background-color: #ffffff;
+    color: #212529;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    transition: transform 0.2s;
+}
+.stat-card:hover {
+    transform: scale(1.02);
+}
+.stat-card h3 {
+    margin: 5px 0;
+    font-size: 16px;
+}
+.stat-card p {
+    font-size: 20px;
+    margin: 0;
+}
+.stat-card {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+.charts {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.chart-container {
+    flex: 1;
+    margin: 0 5px;
+    background-color: #ffffff;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 200px; /* Reduced height */
+}
+.recent-orders {
+    margin-top: 15px;
+    background-color: #ffffff;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    overflow: hidden;
+}
+table th, table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #e9ecef;
+}
+table th {
+    background-color: #f1f3f5;
+    font-weight: bold;
+    color: #495057;
+}
+table td {
+    background-color: #ffffff;
+    color: #6c757d;
+}
+table tr:hover td {
+    background-color: #f8f9fa;
+}
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+.action-buttons a {
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+.action-buttons .view {
+    background-color: #51cf66;
+    color: #ffffff;
+}
+.action-buttons .view:hover {
+    background-color: #40c057;
+}
+.action-buttons .edit {
+    background-color: #339af0;
+    color: #ffffff;
+}
+.action-buttons .edit:hover {
+    background-color: #228be6;
+}
+.line-chart-container {
+    flex: 1;
+    margin: 0 5px;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 200px; /* Matching height for consistency */
+}
+
+#blogUploadContainer {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  #blogUploadContainer h2 {
+    margin-top: 0;
+    text-align: center;
+  }
+  #blogUploadContainer label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  #blogUploadContainer input[type="text"],
+  #blogUploadContainer textarea,
+  #blogUploadContainer input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+  }
+  #blogUploadContainer button {
+    width: 100%;
+    padding: 10px;
+    background-color:#258EA6;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  #blogUploadContainer button:hover {
+    background-color: #357ae8;
+  }
+.uploadingwrapper{
+    top: 0;
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    /* background-color: rgba(0,0,0,0.5); */
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.closebtn{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+
+.icon_circle{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    /* position: absolute; */
+    /* left: 2px; */
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    background-color: #21252924;
+
+}
+
+    </style>
+</head>
+<body>
+    
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <div class="dash_head"><a href="{% url 'home' %}"><ion-icon name="home"></ion-icon>Home</a></div>
+        <div class="dash_head"><a href="{% url 'home' %}#blog" onclick="clickforum()"><ion-icon name="newspaper"></ion-icon>Blogs</a></div>
+        <div class="dash_head"><a href="{% url 'home' %}#games"><ion-icon name="game-controller"></ion-icon>Games</a></div>
+                
+    </div>
+    
+    <div class="content">
+        <div class="topbar">
+            <h1>Dashboard</h1>
+        </div>
+        <div class="stats">
+            <div class="stat-card" style="background-color: #b53b3f;color: white;">
+                <div class="test">
+                    <h3>Game 4</h3>
+                    <p>5</p>
+                </div>
+                <div class="icon_circle"><ion-icon name="game-controller"></ion-icon></div>
+            </div>
+            <div class="stat-card"  style="background-color:#50a2ee ;color: white;">
+                <div class="test">
+                    <h3>Game 4</h3>
+                    <p>5</p>
+                </div>
+                <div class="icon_circle"><ion-icon name="game-controller"></ion-icon></div>
+            </div>
+            <div class="stat-card"  style="background-color:#5b2a86;color: white;">
+                <div class="test">
+                    <h3>Game 4</h3>
+                    <p>5</p>
+                </div>
+                <div class="icon_circle"><ion-icon name="game-controller"></ion-icon></div>
+            </div>
+            <div class="stat-card"  style="background-color: #e3879e;color: white; ">
+                <div class="test">
+
+                    <h3>Game 4</h3>
+                    <p>5</p>
+                </div>
+                <div class="icon_circle"><ion-icon name="game-controller"></ion-icon></div>
+            </div>
+        </div>
+        <div class="charts">
+            <div class="chart-container">
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="pieChart"></canvas>
+            </div>
+            <!-- <div class="line-chart-container" id="lineChart"> -->
+                
+            </div>
+        </div>
+        
+
+
+    </div>
+
+    <script>
+        // Bar Chart
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May'],
+                datasets: [{
+                    label: 'Monthly Sales',
+                    data: [1200, 1900, 3000, 5000, 2300],
+                    backgroundColor: ['#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4db6ac'],
+                    borderColor: ['#42a5f5', '#66bb6a', '#ffa726', '#ab47bc', '#26a69a'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Pie Chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Pending Orders', 'Canceled Orders', 'Processing Orders', 'Completed Orders'],
+        datasets: [{
+            label: 'Order Distribution',
+            data: [2, 0, 5, 8],
+            backgroundColor: ['#ff7043', '#e57373', '#64b5f6', '#81c784'],
+            borderColor: ['#ffffff', '#ffffff', '#ffffff', '#ffffff'], // White border for a clean look
+            borderWidth: 2, // Slightly thicker borders
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    font: {
+                        size: 14, // Adjust font size for better readability
+                        family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", // Font style
+                    },
+                    color: '#495057', // Darker text color for contrast
+                    boxWidth: 15, // Smaller legend box size
+                }
+            },
+            tooltip: {
+                backgroundColor: '#212529', // Dark tooltip background
+                titleColor: '#f8f9fa', // Light tooltip text color
+                bodyColor: '#f8f9fa', // Light body text color
+                borderWidth: 1,
+                borderColor: '#6c757d', // Subtle border for tooltip
+            }
+        },
+        layout: {
+            padding: {
+                top: 10, // Add padding around the chart for spacing
+                bottom: 10,
+            }
+        }
+    }
+});
+
+
+function clickforum(){
+        document.querySelector(".uploadingwrapper").style.display = "flex";
+    }
+
+function closebtn(){
+        document.querySelector(".uploadingwrapper").style.display = "none";
+    }
+
+    </script>
+
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+ <!-- forum  -->
+
+<div class="uploadingwrapper" id="uploadingwrapper">
+    <div id="blogUploadContainer">
+        <h1 class="closebtn" onclick="closebtn()"><ion-icon name="close-outline"></ion-icon></h1>
+        <h2>Upload Post</h2>
+        <form id="blogUploadForm" action="/upload/" method="post" enctype="multipart/form-data">
+          <!-- Django CSRF token -->
+          {% csrf_token %}
+          
+          <!-- Image Upload Field (moved above the heading field) -->
+          <label for="imageUpload">Image Upload:</label>
+          <input type="file" id="imageUpload" name="image" accept="image/*" required>
+          
+          <!-- Heading Field -->
+          <label for="heading">Heading:</label>
+          <input type="text" id="heading" name="heading" placeholder="Enter blog heading" required>
+          
+          <!-- Description Field -->
+          <label for="description">Description:</label>
+          <textarea id="description" name="description" placeholder="Enter blog description" rows="5" required></textarea>
+          
+          <!-- Submit Button -->
+          <button type="submit">Upload Blog</button>
+        </form>
+      </div>
+    
+</div>
+
+</body>
+</html>

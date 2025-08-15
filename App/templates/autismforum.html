@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="{% static 'css/autismforum.css' %}">
+</head>
+<body>
+  <div class="navbar">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo">
+          <div class="icon"></div>
+          <span>Forum</span>
+        </a>
+        
+        <div class="nav-links">
+          <button id="createPostBtn" class="btn btn-primary">Create Post</button>
+          <button id="loginBtn" class="btn btn-primary">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Categories</div>
+        <div class="sidebar-menu">
+          <div>
+            <a href="/category/tech">
+              <div class="icon"></div>
+              Technology
+            </a>
+          </div>
+          <div>
+            <a href="/category/gaming">
+              <div class="icon"></div>
+              Gaming
+            </a>
+          </div>
+          <div>
+            <a href="/category/art">
+              <div class="icon"></div>
+              Art & Design
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- <div class="create-post">
+        <div class="create-post-title">Create a New Post</div>
+        <form id="postForm">
+          <div class="form-group">
+            <div class="form-label">Title</div>
+            <input type="text" id="postTitle" class="form-input" placeholder="Enter post title" required>
+          </div>
+          <div class="form-group">
+            <div class="form-label">Description</div>
+            <textarea id="postDescription" class="form-input" rows="3" placeholder="Enter post description" required></textarea>
+          </div>
+          <div class="form-group">
+            <div class="form-label">Upload Photo/Video</div>
+            <input type="file" id="postMedia" class="form-input" accept="image/*,video/*" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Create Post</button>
+        </form>
+      </div> -->
+
+      <div class="post-container">
+        <div class="post-header">
+          <div>
+            <div class="post-title">Amazing Sunset Photography</div>
+            <div class="post-meta">Posted by John Doe • 2 hours ago</div>
+          </div>
+          <button class="delete-btn" onclick="deletePost('post1')">
+            <div class="icon"></div>
+          </button>
+        </div>
+        
+        <div class="post-content">
+          <div class="post-description">Captured this beautiful sunset at the beach yesterday. The colors were absolutely stunning!</div>
+          <img src="https://images.unsplash.com/photo-1616036740257-9449ea1f6605" alt="Sunset" class="post-media">
+        </div>
+
+        <div class="comments-section">
+          <div class="comment">
+              <div class="comment-header">
+                  <div class="comment-author">Jane Smith</div>
+              </div>
+              <div class="comment-content">Beautiful capture! The colors are amazing.</div>
+              <div class="comment-actions">
+                  <button class="reply-btn" onclick="toggleReplyForm('reply-form-comment1')">Reply</button>
+              </div>
+      
+              <!-- Hidden Reply Form -->
+              <form method="POST" action="{% url 'post_reply' comment_id=1 %}" id="reply-form-comment1" style="display: none;">
+                  {% csrf_token %}
+                  <textarea name="reply_text" class="comment-input" placeholder="Write a reply..." required></textarea>
+                  <button type="submit" class="btn btn-primary">Post Reply</button>
+              </form>
+      
+              <div class="replies">
+                  <div class="comment">
+                      <div class="comment-header">
+                          <div class="comment-author">Mike Johnson</div>
+                      </div>
+                      <div class="comment-content">Agreed! The composition is perfect.</div>
+                      <div class="comment-actions">
+                          <button class="reply-btn" onclick="toggleReplyForm('reply-form-reply1')">Reply</button>
+                      </div>
+      
+                      <!-- Hidden Reply to Reply Form -->
+                      <form method="POST" action="{% url 'post_reply' comment_id=2 %}" id="reply-form-reply1" style="display: none;">
+                          {% csrf_token %}
+                          <textarea name="reply_text" class="comment-input" placeholder="Write a reply..." required></textarea>
+                          <button type="submit" class="btn btn-primary">Post Reply</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+       </div>      
+      </div>
+    </div>
+  </div>
+  <script>
+    function toggleReplyForm(formId) {
+    var form = document.getElementById(formId);
+    if (form.style.display === "none") {
+        form.style.display = "block";
+    } else {
+        form.style.display = "none";
+    }
+}
+  </script>
+</body>
+</html>

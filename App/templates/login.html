@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autism Detection Project - Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);           
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-circle {
+            fill: none;
+            stroke: #6a11cb;
+            stroke-width: 4;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 377;
+            animation: logo-animation 2s ease forwards;
+        }
+
+        .logo-puzzle {
+            fill: #6a11cb;
+            opacity: 0;
+            transform-origin: center;
+            animation: puzzle-animation 1s ease forwards 1s;
+        }
+
+        @keyframes logo-animation {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes puzzle-animation {
+            from {
+                opacity: 0;
+                transform: scale(0.5) rotate(-45deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        h1 {
+            color: #6a11cb;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4b5563;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+
+        button {
+            background-color: #6a11cb;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            overflow: hidden;
+            position: relative;
+        }
+
+        button:hover {
+            background-color: #5a0cb3;
+        }
+
+        button:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+
+        button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .background-animation span {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            animation: move 5s linear infinite;
+            border-radius: 50%;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(100vh) scale(0);
+            }
+            100% {
+                transform: translateY(-100vh) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation">
+        <span style="left: 10%; animation-delay: 0s;"></span>
+        <span style="left: 20%; animation-delay: 2s;"></span>
+        <span style="left: 30%; animation-delay: 4s;"></span>
+        <span style="left: 40%; animation-delay: 1s;"></span>
+        <span style="left: 50%; animation-delay: 3s;"></span>
+        <span style="left: 60%; animation-delay: 5s;"></span>
+        <span style="left: 70%; animation-delay: 2s;"></span>
+        <span style="left: 80%; animation-delay: 4s;"></span>
+        <span style="left: 90%; animation-delay: 1s;"></span>
+    </div>
+    <div class="container">
+        <div class="logo">
+            <svg viewBox="0 0 100 100">
+                <circle class="logo-circle" cx="50" cy="50" r="45" />
+                <path class="logo-puzzle" d="M35,35 L50,35 L50,20 L65,20 L65,35 L80,35 L80,50 L65,50 L65,65 L50,65 L50,80 L35,80 L35,65 L20,65 L20,50 L35,50 Z" />
+            </svg>
+        </div>
+        <h1>Login</h1>
+        <form>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <script>
+        document.querySelector('button').addEventListener('mousedown', function(e) {
+            var ripple = this.querySelector(':after');
+            if (ripple) {
+                var size = Math.max(this.offsetWidth, this.offsetHeight);
+                ripple.style.width = ripple.style.height = size + 'px';
+                var rect = this.getBoundingClientRect();
+                ripple.style.left = e.clientX - rect.left - (size / 2) + 'px';
+                ripple.style.top = e.clientY - rect.top - (size / 2) + 'px';
+            }
+        });
+    </script>
+</body>
+</html>

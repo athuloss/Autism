@@ -403,15 +403,15 @@ def update_comment_replay(request):
 
 
 
-@require_POST
-def start_gaze(request):
-    gazedetection.start_gaze_detection()
-    return redirect("home")
+# @require_POST
+# def start_gaze(request):
+#     gazedetection.start_gaze_detection()
+#     return redirect("home")
 
-@require_POST
-def stop_gaze(request):
-    gazedetection.stop_gaze_detection()
-    return redirect("home")
+# @require_POST
+# def stop_gaze(request):
+#     gazedetection.stop_gaze_detection()
+#     return redirect("home")
 
 import random 
 def ImageGame(request):

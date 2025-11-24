@@ -62,8 +62,8 @@ urlpatterns = [
     path('get-user-game-data/<int:user_id>/', views.get_user_game_stats, name='get_user_game_data'),
     path('update-doctor/', views.doctorview, name='doctorview'),
 
-    path('start_gaze/', views.start_gaze, name='start_gaze'),
-    path('stop_gaze/', views.stop_gaze, name='stop_gaze'),
+    # path('start_gaze/', views.start_gaze, name='start_gaze'),
+    # path('stop_gaze/', views.stop_gaze, name='stop_gaze'),
     path('deletecmt/<pk>', views.deletecmt, name='deletecmt'),
     path('feedtest/', views.feedtest, name='feedtest'),
     path('data_feedback/', views.data_feedback, name='data_feedback'),

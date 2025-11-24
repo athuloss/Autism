@@ -181,7 +181,7 @@
         <a href="#blog">Blog</a>
         {% if request.user.is_authenticated%}
         <a href="#games">Games</a>
-        <a href="{% url 'feedtest' %}">Feedback</a>
+        <!-- <a href="{% url 'feedtest' %}">Feedback</a> -->
         {% endif %}
         {% if request.user.is_authenticated %}
         <a onclick="chatt()" style="cursor: pointer;">ChatBot</a>
@@ -200,24 +200,14 @@
         <a href="{% url 'adminDashboard' %}">Dashboard</a>
     {% endif %}
     
-
-        {% if request.user.is_authenticated %}
-        {% if detection_running %}
-        <form action="{% url 'stop_gaze' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="signup" style="background-color: rgb(181, 65, 65);">Stop Gaze Detection</button>
-        </form>
-        {% else %}
-            <form action="{% url 'start_gaze' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="signup">Start Gaze Detection</button>
-            </form>
-        {% endif %}
-        <a href="{% url 'logouts' %}" class="login" style="padding: 1px 5px;"><button style="cursor: pointer;border: none;background-color: transparent;color: #258EA6;font-weight: 600;padding: 7px;" >Log Out</button></a>
-        {% else %}
-        <button onclick="showLogin()" style="cursor: pointer;" class="login">Log In</button>
-        <button onclick="showsignup()" style="cursor: pointer;" class="signup">Sign Up</button>
-        {% endif %}
+ {% if not request.user.is_authenticated %}
+    <button onclick="showLogin()" style="cursor: pointer;" class="login">Log In</button>
+    {% else %}
+   <a href="{% url 'logouts' %}" ><button  style="cursor: pointer;" class="login">Log out</button></a>
+    {% endif %}
+    {% if not request.user.is_authenticated %}
+    <button onclick="showsignup()" style="cursor: pointer;" class="signup">Sign Up</button>
+    {% endif %}
         </div>
     </div>
     <div class="hero">
